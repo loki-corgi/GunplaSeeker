@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--copied from the assignment need to change it to add in search bar and some other stuff maybe-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Name: Error Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Title</h1>  <!--We probably should make a logo-->
+        <nav>
+            <ul>
+                <li><a href='/'>Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h2>Error</h2>
+    
+    <!--CSS contains dl and dt so the solution expected requires it-->
+    <dl>
+        <% errors.forEach(error => { %>
+        <dt><%= error.field %></dt>
+        <dd><%= error.message %></dd>
+        <% }) %>
+    </dl>
+</body>
+</html>
