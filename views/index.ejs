@@ -1,3 +1,49 @@
-<!--this template should just introduce the user to the website
-should just be a description of the website and its functionality
-it should also have the search bar ready to go-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>TV Show Application: Advanced Version</h1>
+    <h2>Create New TV Show</h2>
+    <form action="/api/v1/shows" method="POST">
+        <label>
+            Title
+            <input type="text" name="title">
+        </label>
+        <label>
+            Number of seasons
+            <input type="number" name="seasons">
+        </label>
+        <label>
+            Year of first episode
+            <input type="number" name="year">
+        </label>
+        <fieldset>
+            <legend>Top Actors</legend>
+            <!-- loop through actors array -->
+            <% actors.forEach(actor=>{ %>
+                <label>
+                    <%= actor.name %>
+                    <!-- the value of the input has the actor's unique MongoDB object ID -->
+                    <input type="checkbox" name="checkActor" value="<%= actor._id %>">
+                </label>
+            <%}) %>
+        </fieldset>
+        <button>Submit</button>
+    </form>
+
+    <h2>Create New Actor</h2>
+    <form action="/api/v1/actors" method="POST">
+        <label>
+            Actor Name
+            <input type="text" name="actorName">
+        </label>
+        <button>Submit</button>
+    </form>
+
+    <p>See all shows in JSON format: <a href="/api/v1/shows">Shows</a></p>
+</body>
+</html>
