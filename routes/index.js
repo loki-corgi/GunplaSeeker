@@ -1,10 +1,10 @@
 import express from 'express';
-import actorsRoutes from '../routes/actors.js';
-import showsRoutes from '../routes/shows.js';
+import updateRoutes from './update.js';
+import retrieveRoutes from './retrieve.js';
 
 const router = express.Router();
 
-router.use('/actors', actorsRoutes);
-router.use('/shows', showsRoutes)
+router.use('/update-db', updateRoutes);
+router.use('/retrieve', retrieveRoutes)
 
 export default router;

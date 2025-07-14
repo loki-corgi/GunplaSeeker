@@ -24,6 +24,6 @@ process.on('SIGINT', ()=>{
 })
 
 const connection = client.connect();
-const database = client.db('a6-tv-shows'); 
+const database = client.db('gundam-db'); 
 
 export { connection, database };
