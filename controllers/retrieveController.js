@@ -47,8 +47,9 @@ const getAllModels = async (req,res) => {
         //we use this to display the name of the model as well as number of entries for that model in listings.ejs
         const listings = await database.collection('gundam-models')
             .aggregate(
-                {
-                    $group: { _id: "$modelName", totalEntry: { $sum: "$quantity" } }
+                {    
+                    //$group: { _id: "$modelName", totalEntry: { $sum: "$quantity" } }
+                    $group: { modelName: "$modelName", totalEntry: { $sum: "$quantity" } }
                 }
             )
             .toArray();
