@@ -7,7 +7,7 @@ const setupCollections = database => {
                 title: 'Gundam Model Object Collection',
                 required: [ 'dateAdded', 'modelName', 'modelGrade', 'price', 'streetNumber', 'streetname', 'city', 'province' ],
                 properties: {
-                    dateAdded: {
+                    timestamp: {
                         bsonType: 'date',
                         minimum: ISODate('1980-07-01-T00:00:00Z'),  //date of first Gunpla model kit
                         maximum: ISODate('2100-01-01-T00:00:00Z'),
@@ -30,7 +30,7 @@ const setupCollections = database => {
                     },
                     price: {
                         bsonType: 'decimal',
-                        mimimum: NumberDecimal('0.00'),
+                        minimum: {'$numberDecimal': '0.00'},    //schema doesn't restrict to 2 decimal places
                         description: 'Price must be a dollar amount greater than 0'
                     },
                     streetNumber: {
