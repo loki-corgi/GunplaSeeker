@@ -1,5 +1,90 @@
-<!--this template handles adding new data into the database
+<!DOCTYPE HTML>
+<html lang="en">
 
-look in validator for the array of grades
+<head>
+    <meta charset="UTF-8">
+    <title>
+        GunplaSeeker
+    </title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
 
-use checkboxes for model grade-->
+<body>
+    <%- include('header') %>
+
+        <main id="form-page">
+            <h2>Enter a new listing</h2>
+
+            <form action="/api/v1/addModel" method="get" id="add-model-form">
+            
+                <label for="modelName">Model Name:</label>
+                <input type="text" id="modelName" name="modelName" minlength="1" maxlength="50" required>
+                <br><br>
+                
+                <fieldset>
+                    <legend>Select Model Grade</legend>
+
+                    <label><input type="radio" name="modelGrade" value="Advance Grade"> Advance Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="Entry Grade"> Entry Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="EX Model"> EX Model</label><br>
+                    <label><input type="radio" name="modelGrade" value="First Grade"> First Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="Full Mechanics"> Full Mechanics</label><br>
+                    <label><input type="radio" name="modelGrade" value="High Grade"> High Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="High-Resolution Model"> High-Resolution Model</label><br>
+                    <label><input type="radio" name="modelGrade" value="Hyper Hybrids Model"> Hyper Hybrids Model</label><br>
+                    <label><input type="radio" name="modelGrade" value="Limited Model"> Limited Model</label><br>
+                    <label><input type="radio" name="modelGrade" value="Mega Size"> Mega Size</label><br>
+                    <label><input type="radio" name="modelGrade" value="Master Grade"> Master Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="Master Grade Extreme"> Master Grade Extreme</label><br>
+                    <label><input type="radio" name="modelGrade" value="Master Grade Super-Deformed"> Master Grade Super-Deformed</label><br>
+                    <label><input type="radio" name="modelGrade" value="No-Grade"> No-Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="Perfect Grade"> Perfect Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="Reborn-One Hundred"> Reborn-One Hundred</label><br>
+                    <label><input type="radio" name="modelGrade" value="Real Grade"> Real Grade</label><br>
+                    <label><input type="radio" name="modelGrade" value="Super-Deformed Extreme"> Super-Deformed Extreme</label><br>
+                    <label><input type="radio" name="modelGrade" value="Super Grade Collection"> Super Grade Collection</label><br>
+                </fieldset>
+                
+                <label for="price">Price ($):</label>
+                <input type="number" id="price" name="price" min="0" required>
+                <br><br>
+                
+                <label for="streetNumber">Street Number:</label>
+                <input type="number" id="streetNumber" name="streetNumber" min="1" required>
+                <br><br>
+                
+                <label for="streetName">Street Name:</label>
+                <input type="text" id="streetName" name="streetName" minlength="2" maxlength="40" required>
+                <br><br>
+                
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" minlength="3" maxlength="40" required>
+                <br><br>
+
+                <label for="province">Province:</label>
+                <select id="province" name="province" required>
+                    <option value="">-- Select Province --</option>
+                    <option value="AB">AB</option>
+                    <option value="BC">BC</option>
+                    <option value="MB">MB</option>
+                    <option value="NB">NB</option>
+                    <option value="NL">NL</option>
+                    <option value="NS">NS</option>
+                    <option value="NT">NT</option>
+                    <option value="NU">NU</option>
+                    <option value="ON">ON</option>
+                    <option value="PE">PE</option>
+                    <option value="QC">QC</option>
+                    <option value="SK">SK</option>
+                    <option value="YT">YT</option>
+                </select>
+                <br><br>
+
+            </form>
+
+        </main>
+
+        <%- include('footer') %>
+</body>
+</html>
