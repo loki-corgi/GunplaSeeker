@@ -28,9 +28,10 @@ const addModel = async (req, res) => {
         //when model is successfully added into database, redirect to index which will show the new listing with a message passed into query param
         res.redirect(`/?msg=Successfully%20added%20${model.name}`);
     }
+    //this catch is used when inputting into database produced some schema validation error
     catch (e) {
         console.dir(e, {depth: null});
-        res.render('error', { message: 'One or more fields are invalid' });
+        res.render('error', { errors: `${errors}` });
     }
 };
 

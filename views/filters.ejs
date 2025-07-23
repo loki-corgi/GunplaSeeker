@@ -1,0 +1,37 @@
+<div id="sidebar">
+    <form action="/search" method="get" id="search-form">
+        <!-- Search -->
+        <input type="text" name="q" placeholder="Search listings..." required>
+        <button type="submit">Search</button>
+
+        <!-- Filters -->
+        <p id="filters">Filters ▼</p>
+
+        <div id="filter-options" margin-top: 10px;">
+
+            <!-- Name-->
+            <label for="sort-name">Sort by Name:</label>
+            <select name="sortName" id="sort-name">
+                <option value="">None</option>
+                <option value="asc">A → Z</option>
+                <option value="desc">Z → A</option>
+            </select><br><br>
+
+            <!--Date -->
+            <label for="sort-date">Sort by Date:</label>
+            <select name="sortDate" id="sort-date">
+                <option value="">None</option>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+            </select><br><br>
+
+            <!--Cost -->
+            <label for="sort-cost">Sort by Cost:</label>
+            <select name="sortCost" id="sort-cost">
+                <option value="">None</option>
+                <option value="low">Low → High</option>
+                <option value="high">High → Low</option>
+            </select><br><br>
+        </div>
+    </form>
+</div>

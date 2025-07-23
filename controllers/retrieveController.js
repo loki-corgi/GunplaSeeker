@@ -65,14 +65,18 @@ const getModel = async (req, res) => {
                 .find(query)
                 .sort(sortPriority)   //model name and grade is sorted first before price
                 .toArray();
+
+        //count is the number of objects in the array from results
+        const count = results.length;
         
-        res.render('search-results', { searchResults: results } );
+        //reuse index.ejs for search result
+        res.render('index', { message: `Search Results: ${count} Total listings` ,  listings: results } );
 
     }
     catch (e) {
         console.error(e);
         //needed because potentially there is nothing to grab
-        res.render('search-results', { searchResults: [] });
+        res.render('index', { message: 'No listings found.', listings: [] });
     }
 };
 
@@ -82,22 +86,50 @@ const getAllModels = async (req,res) => {
 
         const database = req.app.locals.database;
 
-        //in aggregate, $group groups all data with the same modelName and outputs one entry
-        //$sum calculates the number of entries with the same name
-        //we use this to display the name of the model as well as number of entries for that model in listings.ejs
-        const listings = await database.collection('gundam-models')
-            .aggregate(
-                {    
-                    //$group: { _id: "$modelName", totalEntry: { $sum: "$quantity" } }
-                    $group: { modelName: "$modelName", totalEntry: { $sum: "$quantity" } }
+        //this searches the database collection for the total number of document
+        const count = await database.collection('gundam-models').countDocument({ });
+
+        //if no data in collection then just show that there is no entries to list
+        if(count == 0) { 
+            res.render('listings', { message: `No Entries`, listings: { } });
+        }
+        else {
+
+            //in aggregate, $group groups all data with the same modelName and outputs one entry
+            //$sum calculates the number of entries with the same name
+            //we use this to display the name of the model as well as number of entries for that model in listings.ejs
+            const listings = await database.collection('gundam-models')
+                .aggregate(
+                    {    
+                        $group: { _id: "$modelName", totalEntry: { $sum: "$quantity" } }
+                    }
+                )
+                .toArray();
+
+            //now group each entry to the first character
+            const groupedListings = {};
+
+            //loops the array of listings to add into groupedListing object
+            //reminder that trying looping an empty array will not execute anything inside the loop since we never actually go into the loop
+            for(let model of listings) {
+                let name = model._id;
+                let firstChar = name.charAt(0).toUpperCase();
+
+                //make new character group array in groupedListing if no existing key
+                if(!groupedListings.firstChar) {
+                    groupedListings.firstChar = [];
                 }
-            )
-            .toArray();
+
+                //push object into array of character group key
+                groupedListings.firstChar.push({
+                    modelName: name,
+                    totalEntries: model.totalEntries
+                });
+            }
         
-        //troubleshoot
-        console.log(listings);
-        
-        res.render('listings', { searchResults: listings });
+            res.render('listings', { message: `${count} Total Entries`, listings: groupedListings });
+
+        }
     }
     catch (e) {
         console.dir(e, {depth: null});

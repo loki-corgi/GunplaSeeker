@@ -1,3 +1,4 @@
+//this route is used when getting the root page or when redirecting to root page after adding a new entry into database collection
 const indexListing = async (req, res) => {
     try {
         const database = req.app.locals.database;
@@ -8,12 +9,12 @@ const indexListing = async (req, res) => {
         //get the last 3 entries
         const listings = await database.collection('gundam-models').find().sort({ timestamp: -1 }).limit(3).toArray();
 
-        res.render('index', { message: message, newestListings: listings } );
+        res.render('index', { message: message, listings: listings } );
 
     }
     catch(e) {
         console.error(e);
         //needed because potentially there is nothing to grab
-        res.render('index', { message: 'No listing', newestListings: [] });
+        res.render('index', { message: 'No listing', listings: [] });
     }
 };

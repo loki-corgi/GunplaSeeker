@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        <%= person %>
+        GunplaSeeker
     </title>
     <link rel="stylesheet" href="/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
@@ -14,8 +14,10 @@
     <%- include('header') %>
 
         <main>
+            <p> <%= message %> </p>
+
             <section id="content">
-                <% newestListings.forEach((listing) => { %>
+                <% listings.forEach((listing) => { %>
                     <div class="listing"> 
                         <h2 class="model-name"><%= listing.modelName% ></h2>
                         <p class="info">Grade: <%= listing.modelGrade %></p>
