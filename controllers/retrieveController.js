@@ -138,12 +138,12 @@ const getAllModels = async (req,res) => {
                 let firstChar = name.charAt(0).toUpperCase();
 
                 //make new character group array in groupedListing if no existing key
-                if(!groupedListings.firstChar) {
-                    groupedListings.firstChar = [];
+                if(!groupedListings[firstChar]) {
+                    groupedListings[firstChar] = [];
                 }
 
                 //push object into array of character group key
-                groupedListings.firstChar.push({
+                groupedListings[firstChar].push({
                     modelName: name,
                     totalEntries: model.totalEntry
                 });
