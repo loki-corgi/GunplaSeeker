@@ -10,6 +10,16 @@ const getModel = async (req, res) => {
         //default sort, priorities time before name
         let sortPriority = {timestamp: -1, modelName: 1};
 
+        //set up page number using query string
+        //the || 1 ensures that there is at least 1 page
+        const page = parseInt(req.query.page) || 1;
+
+        //set up pageSize for limiting displayed listings to 50 listing
+        const pageSize = 50;
+
+        //handles which documents to skip
+        const skip = (page - 1) * pageSize;
+
         //note that every value from html is a string even when attribute restricts input as int, float, etc.
         const { startDate, endDate, modelName, modelGrade, startPrice, endPrice, province, sortBy, sortOrder } = req.query;
 
@@ -63,20 +73,29 @@ const getModel = async (req, res) => {
         //grabs from database
         const results = await database.collection('gundam-models')
                 .find(query)
-                .sort(sortPriority)   //model name and grade is sorted first before price
+                .sort(sortPriority) //model name and grade is sorted first before price
+                .skip(skip)         //skips (page -1) * 50
+                .limit(pageSize)    //limits to 50 listing
                 .toArray();
 
-        //count is the number of objects in the array from results
-        const count = results.length;
+        //stores total number of documents in collection
+        //we don't use Array.length because the array we grabbed and store in results is not the entire listing
+        const count = await database.collection('gundam-models')
+                .find(query)
+                .countDocument();
+
+        //handles pagination
+        const hasNextPage = page * pageSize < count;
+        const hasPreviousPage = page > 1;
         
         //reuse index.ejs for search result
-        res.render('index', { message: `Search Results: ${count} Total listings` ,  listings: results } );
+        res.render('index', { message: `Search Results: ${count} Total listings` ,  listings: results, currentPage: page, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage } );
 
     }
     catch (e) {
         console.error(e);
         //needed because potentially there is nothing to grab
-        res.render('index', { message: 'No listings found.', listings: [] });
+        res.render('index', { message: 'No listings found.', listings: [], currentPage: page, hasNextPage: null, hasPreviousPage: null });
     }
 };
 
@@ -131,6 +150,7 @@ const getAllModels = async (req,res) => {
 
         }
     }
+    //this catch is used only when there is an unexpected error with the searching the database
     catch (e) {
         console.dir(e, {depth: null});
         res.render('error', {message: 'Problem getting collection in database'});

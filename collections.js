@@ -5,13 +5,11 @@ const setupCollections = database => {
             $jsonSchema: {
                 bsonType: 'object',
                 title: 'Gundam Model Object Collection',
-                required: [ 'dateAdded', 'modelName', 'modelGrade', 'price', 'streetNumber', 'streetname', 'city', 'province' ],
+                required: [ 'timestamp', 'modelName', 'modelGrade', 'price', 'streetNumber', 'streetName', 'city', 'province' ],
                 properties: {
                     timestamp: {
                         bsonType: 'date',
-                        minimum: ISODate('1980-07-01-T00:00:00Z'),  //date of first Gunpla model kit
-                        maximum: ISODate('2100-01-01-T00:00:00Z'),
-                        description: "must be between 1980-07-01 and 2100-01-01"
+                        description: "must be a Date object"
                     },
                     modelName: {
                         bsonType: 'string',
@@ -30,7 +28,9 @@ const setupCollections = database => {
                     },
                     price: {
                         bsonType: 'decimal',
-                        minimum: {'$numberDecimal': '0.00'},    //schema doesn't restrict to 2 decimal places
+                        //note: it doesn't matter that the minimum is an int
+                        //mongoDB compares the numeric value and not the storage format
+                        minimum: 0,
                         description: 'Price must be a dollar amount greater than 0'
                     },
                     streetNumber: {

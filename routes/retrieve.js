@@ -1,9 +1,9 @@
 //handles retrieving data from database
 import express from 'express';
-import { getModel, getAllModels } from '../controllers/retrieve.js';
+import { getModel, getAllModels } from '../controllers/retrieveController.js';
 
 const router = express.Router();
-router.get('/model', getModel);
-router.get('/listing', getAllModels);
+router.get('/getModel', getModel);
+router.get('/getListing', getAllModels);
 
 export default router;

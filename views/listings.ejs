@@ -1,57 +1,36 @@
-<!DOCTYPE html>
-<!--this template is used for displaying all the models in the database so that 
-when one is selected it automatically search the database for that model without using the search bar-->
+<!DOCTYPE HTML>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Name: Listings Page</title>
-    <!--/static/style.css is from the virtual path specified in the middleware serving static files-->
-    <link rel="stylesheet" href="/static/style.css">
+    <title>
+        GunplaSeeker
+    </title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <header>
-        <h1>Title</h1>  <!--We probably should make a logo-->
-        <nav>
-            <ul>
-                <li><a href='/'>Home</a></li>
-            </ul>
-        </nav>
-    </header>
+    <%- include('header') %>
 
-    <main>
-        <div id="content">
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
-            <p class="listing">listing</p>
+        <main>
+            <p> <%= message %> </p>
 
+            <section id="content">
+                <% Object.keys(listings).sort().forEach(letter => { %>
+                <h2><%= letter %></h2>
+                <ul>
+                    <% listings[letter].forEach(model => { %>
+                        <li><%= model.modelName %> — <%= model.totalEntry %> entries</li>
+                    <% }); %>
+                </ul>
+                <% }); %>
+            </section>
 
-           
-           
-       
+            <%- include('filters') %>
 
-        </div>
+        </main>
 
-        <div id="sidebar">
-            <p id="filters">filters</p>
-
-        </div>
-
-    </main>
-
-    <footer>
-        <p id="about">About Us</p>
-        <p>Contact</p>
-
-    </footer>
-
+        <%- include('footer') %>
 </body>
 </html>

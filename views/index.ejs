@@ -15,6 +15,7 @@
 
         <main>
             <p> <%= message %> </p>
+            <p> Page: <%= currentPage %> </p>
 
             <section id="content">
                 <% listings.forEach((listing) => { %>
@@ -27,6 +28,8 @@
                     </div>
                 <% }) %>
             </section>
+
+            <!--we need a page navigation here-->
 
             <%- include('filters') %>
 
