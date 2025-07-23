@@ -19,6 +19,7 @@ connection
 .catch(e=>console.error(e));
 
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
 //uses the index.js routes
