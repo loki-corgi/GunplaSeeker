@@ -3,5 +3,7 @@ import express from 'express';
 import { getModel, getAllModels } from '../controllers/retrieve.js';
 
 const router = express.Router();
-router.post('/model', getModel);
-router.post('/listing', getAllModels);
+router.get('/model', getModel);
+router.get('/listing', getAllModels);
+
+export default router;

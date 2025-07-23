@@ -3,6 +3,6 @@ import express from 'express';
 import { addModel } from '../controllers/update.js';
 
 const router = express.Router();
-router.post('/model', addModel);
+router.post('/addModel', addModel);
 
 export default router;
