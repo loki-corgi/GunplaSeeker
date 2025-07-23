@@ -21,13 +21,8 @@ connection
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-//default index page
-app.get('/', (req,res)=>{
-    res.render('index', { message: "" });
-});
-
 //uses the index.js routes
-app.use('api/v1', indexRouter);
+app.use('/', indexRouter);
 
 /*
 //search data in database to display
