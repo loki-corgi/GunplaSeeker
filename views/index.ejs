@@ -20,10 +20,10 @@
             <section id="content">
                 <% listings.forEach((listing) => { %>
                     <div class="listing"> 
-                        <h2 class="model-name"><%= listing.modelName% ></h2>
+                        <h2 class="model-name"><%= listing.modelName %></h2>
                         <p class="info">Grade: <%= listing.modelGrade %></p>
                         <p class="info">Price: $<%= listing.price %></p>
-                        <p class="info">Date added: <%= new Date(listing.modelGrade).toDateString() %></p>
+                        <p class="info">Date added: <%= new Date(listing.timestamp).toDateString() %></p>
                         <p class="info">Location: <%= listing.streetNumber %> <%= listing.streetName %>, <%= listing.city %>, <%= listing.province %> </p>
                     </div>
                 <% }) %>

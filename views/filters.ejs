@@ -1,5 +1,7 @@
+<script type="text/javascript" src="/js/filter.js"></script>
+
 <div id="sidebar">
-    <form action="/search" method="get" id="search-form">
+    <form action="/api/v1/getModels" method="get" id="search-form">
         <!-- Search -->
         <input type="text" name="q" placeholder="Search listings..." required>
         <button type="submit">Search</button>
@@ -7,7 +9,7 @@
         <!-- Filters -->
         <p id="filters">Filters ▼</p>
 
-        <div id="filter-options" margin-top: 10px;">
+        <div id="filter-options" style="margin-top: 10px;">
 
             <!-- Name-->
             <label for="sort-name">Sort by Name:</label>
@@ -16,6 +18,24 @@
                 <option value="asc">A → Z</option>
                 <option value="desc">Z → A</option>
             </select><br><br>
+
+            <!-- Date Range Picker -->
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" name="start-date" />
+
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" name="end-date" />
+
+            <!-- Price Range Sliders -->
+            <div class="slider-container">
+                <label for="min-price">Min Price: $<span id="min-price-display" class="value-display">0</span></label>
+                <input type="range" id="min-price" min="0" max="10000" step="10" value="0" />
+            </div>
+
+            <div class="slider-container">
+                <label for="max-price">Max Price: $<span id="max-price-display" class="value-display">1000</span></label>
+                <input type="range" id="max-price" min="0" max="10000" step="10" value="1000" />
+            </div>
 
             <!--Date -->
             <label for="sort-date">Sort by Date:</label>
@@ -29,7 +49,7 @@
             <label for="sort-cost">Sort by Cost:</label>
             <select name="sortCost" id="sort-cost">
                 <option value="">None</option>
-                <option value="low">Low → High</option>
+                <option value="asc">Low → High</option>
                 <option value="high">High → Low</option>
             </select><br><br>
         </div>

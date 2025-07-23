@@ -2,7 +2,7 @@
 import { Decimal128 } from 'mongodb';
 
 //grab model data based on user input
-const getModel = async (req, res) => {
+const getModels = async (req, res) => {
     try {
         const database = req.app.locals.database;
 
@@ -27,7 +27,7 @@ const getModel = async (req, res) => {
         //the multiple if statements controls whether we look for product with only a certain key or multiple keys
         if (startDate && endDate) {
             //note that mongoDB automatically converts date to ISODate
-            query.timestamp = { $gte: new Date(dateStart), $lte: new Date(dateEnd) };
+            query.timestamp = { $gte: new Date(startDate), $lte: new Date(endDate) };
         }
         if (modelName) {
             query.modelName = modelName;
@@ -36,7 +36,7 @@ const getModel = async (req, res) => {
             query.modelGrade = modelGrade;
         }
         if (startPrice && endPrice) {
-            query.price = { $gte: Decimal128.fromString(startPrice), $lte: Decimal128.fromString(startPrice)};
+            query.price = { $gte: Decimal128.fromString(startPrice), $lte: Decimal128.fromString(endPrice)};
         }
         if (province) {
             query.province = province;
@@ -62,7 +62,7 @@ const getModel = async (req, res) => {
                 sortPriority = { price: order};
             }
             else if(sortBy == 'date') {
-                sortPriority = { date: order };
+                sortPriority = { timestamp: order };
             }
             else if(sortBy == 'province') {
                 sortPriority = { province: order };
@@ -81,8 +81,7 @@ const getModel = async (req, res) => {
         //stores total number of documents in collection
         //we don't use Array.length because the array we grabbed and store in results is not the entire listing
         const count = await database.collection('gundam-models')
-                .find(query)
-                .countDocument();
+                .countDocuments(query);
 
         //handles pagination
         const hasNextPage = page * pageSize < count;
@@ -95,7 +94,7 @@ const getModel = async (req, res) => {
     catch (e) {
         console.error(e);
         //needed because potentially there is nothing to grab
-        res.render('index', { message: 'No listings found.', listings: [], currentPage: page, hasNextPage: null, hasPreviousPage: null });
+        res.status(500).render('index', { message: 'No listings found.', listings: [], currentPage: 1, hasNextPage: null, hasPreviousPage: null });
     }
 };
 
@@ -106,7 +105,7 @@ const getAllModels = async (req,res) => {
         const database = req.app.locals.database;
 
         //this searches the database collection for the total number of document
-        const count = await database.collection('gundam-models').countDocument({ });
+        const count = await database.collection('gundam-models').countDocuments({ });
 
         //if no data in collection then just show that there is no entries to list
         if(count == 0) { 
@@ -152,9 +151,9 @@ const getAllModels = async (req,res) => {
     }
     //this catch is used only when there is an unexpected error with the searching the database
     catch (e) {
-        console.dir(e, {depth: null});
-        res.render('error', {message: 'Problem getting collection in database'});
+        console.dir(e, {depth: null});  //returns an object
+        res.render('error', {errors: []});
     }
 };
 
-export {getModel, getAllModels}
+export {getModels, getAllModels}

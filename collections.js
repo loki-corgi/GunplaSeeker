@@ -1,6 +1,6 @@
 const setupCollections = database => {
 
-    let modelCollection = database.createCollection('models', {
+    let modelCollection = database.createCollection('gundam-models', {
         validator: {
             $jsonSchema: {
                 bsonType: 'object',
@@ -32,6 +32,12 @@ const setupCollections = database => {
                         //mongoDB compares the numeric value and not the storage format
                         minimum: 0,
                         description: 'Price must be a dollar amount greater than 0'
+                    },
+                    storeName: {
+                        bsonType: 'string',
+                        minLength: 2,
+                        maxLength: 40,
+                        description: 'must be a string between 2 and 40 characters long'
                     },
                     streetNumber: {
                         bsonType: 'int',
