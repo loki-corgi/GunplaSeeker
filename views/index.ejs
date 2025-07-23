@@ -1,3 +1,35 @@
-<!--this template should just introduce the user to the website
-should just be a description of the website and its functionality
-it should also have the search bar ready to go-->
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= person %>
+    </title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <%- include('header') %>
+
+        <main>
+            <section id="content">
+                <% newestListings.forEach((listing) => { %>
+                    <div class="listing"> 
+                        <h2 class="model-name"><%= listing.modelName% ></h2>
+                        <p class="info">Grade: <%= listing.modelGrade %></p>
+                        <p class="info">Price: <%= listing.price %></p>
+                        <p class="info">Date added: <%= new Date(listing.modelGrade).toDateString() %></p>
+                        <p class="info">Location: <%= listing.streetNumber %> <%= listing.streetName %>, <%= listing.city %>, <%= listing.province %> </p>
+                    </div>
+                <% }) %>
+            </section>
+
+            <%- include('filters') %>
+
+        </main>
+
+        <%- include('footer') %>
+</body>
+</html>
