@@ -26,8 +26,15 @@ const getModels = async (req, res) => {
         //since find(query) looks up the collection for all keys stated in query
         //the multiple if statements controls whether we look for product with only a certain key or multiple keys
         if (startDate && endDate) {
-            //note that mongoDB automatically converts date to ISODate
-            query.timestamp = { $gte: new Date(startDate), $lte: new Date(endDate) };
+            //store dates into Date object
+            const sDate = new Date(startDate);
+            const eDate = new Date(endDate);
+
+            //if startDate was greater than endDate then throw error
+            if (sDate.getTime() > eDate.getTime()) {
+                throw new Error('startDate greater than endDate');
+            }
+            query.timestamp = { $gte: sDate, $lte: eDate };
         }
         if (modelName) {
             query.modelName = modelName;
