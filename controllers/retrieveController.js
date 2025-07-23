@@ -117,6 +117,7 @@ const getAllModels = async (req,res) => {
         else {
 
             //in aggregate, $group groups all data with the same modelName and outputs one entry
+            //_id is the field to which to group the listing by
             //$sum calculates the number of entries with the same name
             //we use this to display the name of the model as well as number of entries for that model in listings.ejs
             const listings = await database.collection('gundam-models')
