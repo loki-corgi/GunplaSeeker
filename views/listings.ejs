@@ -21,7 +21,12 @@
                 <h2><%= letter %></h2>
                 <ul>
                     <% listings[letter].forEach(model => { %>
-                        <li><%= model.modelName %> — <%= model.totalEntry %> entries</li>
+                        <li>
+                            <a href='/api/v1/getModels?modelName=<%= encodeURIComponent(model.modelName) %>'>
+                                <%= model.modelName %>
+                            </a> 
+                            — <%= model.totalEntries %> entries
+                        </li>
                     <% }); %>
                 </ul>
                 <% }); %>

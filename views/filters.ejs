@@ -3,7 +3,7 @@
 <div id="sidebar">
     <form action="/api/v1/getModels" method="get" id="search-form">
         <!-- Search -->
-        <input type="text" name="q" placeholder="Search listings..." required>
+        <input type="text" name="modelName" placeholder="Search listings..." required>
         <button type="submit">Search</button>
 
         <!-- Filters -->
@@ -11,47 +11,69 @@
 
         <div id="filter-options" style="margin-top: 10px;">
 
-            <!-- Name-->
-            <label for="sort-name">Sort by Name:</label>
-            <select name="sortName" id="sort-name">
-                <option value="">None</option>
-                <option value="asc">A → Z</option>
-                <option value="desc">Z → A</option>
-            </select><br><br>
+            <label for="modelGrade">Select Model Grade:</label><br>
+            <select name="modelGrade" id="modelGrade">
+                <option value="" selected>Select a grade</option>
+                <option value="Advance Grade">Advance Grade</option>
+                <option value="Entry Grade">Entry Grade</option>
+                <option value="EX Model">EX Model</option>
+                <option value="First Grade">First Grade</option>
+                <option value="Full Mechanics">Full Mechanics</option>
+                <option value="High Grade">High Grade</option>
+                <option value="High-Resolution Model">High-Resolution Model</option>
+                <option value="Hyper Hybrids Model">Hyper Hybrids Model</option>
+                <option value="Limited Model">Limited Model</option>
+                <option value="Mega Size">Mega Size</option>
+                <option value="Master Grade">Master Grade</option>
+                <option value="Master Grade Extreme">Master Grade Extreme</option>
+                <option value="Master Grade Super-Deformed">Master Grade Super-Deformed</option>
+                <option value="No-Grade">No-Grade</option>
+                <option value="Perfect Grade">Perfect Grade</option>
+                <option value="Reborn-One Hundred">Reborn-One Hundred</option>
+                <option value="Real Grade">Real Grade</option>
+                <option value="Super-Deformed Extreme">Super-Deformed Extreme</option>
+                <option value="Super Grade Collection">Super Grade Collection</option>
+            </select>
+            <br><br>
+
 
             <!-- Date Range Picker -->
             <label for="start-date">Start Date:</label>
-            <input type="date" id="start-date" name="start-date" />
+            <input type="date" id="startDate" name="startDate" /><br><br>
 
             <label for="end-date">End Date:</label>
-            <input type="date" id="end-date" name="end-date" />
+            <input type="date" id="endDate" name="endDate" /><br><br>
 
             <!-- Price Range Sliders -->
             <div class="slider-container">
-                <label for="min-price">Min Price: $<span id="min-price-display" class="value-display">0</span></label>
-                <input type="range" id="min-price" min="0" max="10000" step="10" value="0" />
+                <label for="minPrice">Min Price: $<span id="min-price-display" class="value-display">0</span></label><br>
+                <input type="range" id="minPrice" min="0" max="10000" step="10" value="0" /><br>
             </div>
 
             <div class="slider-container">
-                <label for="max-price">Max Price: $<span id="max-price-display" class="value-display">1000</span></label>
-                <input type="range" id="max-price" min="0" max="10000" step="10" value="1000" />
+                <label for="maxPrice">Max Price: $<span id="max-price-display" class="value-display">1000</span></label><br>
+                <input type="range" id="maxPrice" min="0" max="10000" step="10" value="1000" /><br>
             </div>
+            <br>
 
-            <!--Date -->
-            <label for="sort-date">Sort by Date:</label>
-            <select name="sortDate" id="sort-date">
-                <option value="">None</option>
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
+            <!--Sort By-->
+            <label for="sortBy">Sort By:</label>
+            <select name="sortOrder" id="sortOrder">
+                <option value="name">Model Name</option>
+                <option value="grade">Model Grade</option>
+                <option value="grade">Model Grade</option>
+                <option value="grade">Price</option>
+                <option value="date">Date</option>
+                <option value="province">Province</option>
             </select><br><br>
 
-            <!--Cost -->
-            <label for="sort-cost">Sort by Cost:</label>
-            <select name="sortCost" id="sort-cost">
-                <option value="">None</option>
-                <option value="asc">Low → High</option>
-                <option value="high">High → Low</option>
+            <!--Sort Order-->
+            <label for="sortOrder">Sort Order:</label>
+            <select name="sortOrder" id="sortOrder">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
             </select><br><br>
+
         </div>
     </form>
 </div>

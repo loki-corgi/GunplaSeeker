@@ -21,7 +21,7 @@ const getModels = async (req, res) => {
         const skip = (page - 1) * pageSize;
 
         //note that every value from html is a string even when attribute restricts input as int, float, etc.
-        const { startDate, endDate, modelName, modelGrade, startPrice, endPrice, province, sortBy, sortOrder } = req.query;
+        const { startDate, endDate, modelName, modelGrade, minPrice, maxPrice, province, sortBy, sortOrder } = req.query;
 
         //since find(query) looks up the collection for all keys stated in query
         //the multiple if statements controls whether we look for product with only a certain key or multiple keys
@@ -35,8 +35,12 @@ const getModels = async (req, res) => {
         if (modelGrade){
             query.modelGrade = modelGrade;
         }
-        if (startPrice && endPrice) {
-            query.price = { $gte: Decimal128.fromString(startPrice), $lte: Decimal128.fromString(endPrice)};
+        if (minPrice && maxPrice) {
+            if (minPrice > maxPrice) {  
+                throw new Error('minPrice is greater than maxPrice');
+            }
+
+            query.price = { $gte: Decimal128.fromString(minPrice), $lte: Decimal128.fromString(maxPrice)};
         }
         if (province) {
             query.province = province;
@@ -93,8 +97,7 @@ const getModels = async (req, res) => {
     }
     catch (e) {
         console.error(e);
-        //needed because potentially there is nothing to grab
-        res.status(500).render('index', { message: 'No listings found.', listings: [], currentPage: 1, hasNextPage: null, hasPreviousPage: null });
+        res.status(500).render('index', { message: e.message, listings: [], currentPage: 1, hasNextPage: null, hasPreviousPage: null });
     }
 };
 
@@ -117,10 +120,10 @@ const getAllModels = async (req,res) => {
             //$sum calculates the number of entries with the same name
             //we use this to display the name of the model as well as number of entries for that model in listings.ejs
             const listings = await database.collection('gundam-models')
-                .aggregate(
+                .aggregate([
                     {    
-                        $group: { _id: "$modelName", totalEntry: { $sum: "$quantity" } }
-                    }
+                        $group: { _id: "$modelName", totalEntry: { $sum: 1 } }
+                    }]
                 )
                 .toArray();
 
@@ -141,8 +144,10 @@ const getAllModels = async (req,res) => {
                 //push object into array of character group key
                 groupedListings.firstChar.push({
                     modelName: name,
-                    totalEntries: model.totalEntries
+                    totalEntries: model.totalEntry
                 });
+
+                console.log(groupedListings);
             }
         
             res.render('listings', { message: `${count} Total Entries`, listings: groupedListings });
