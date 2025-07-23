@@ -1,31 +1,71 @@
+//needed in order to use Decimal128 for price
+import { Decimal128 } from 'mongodb';
+
 //grab model data based on user input
 const getModel = async (req, res) => {
     try {
         const database = req.app.locals.database;
 
         let query = {};
-        const { modelName, modelGrade, priceStart, priceEnd, province } = req.query;
+        //default sort, priorities time before name
+        let sortPriority = {timestamp: -1, modelName: 1};
+
+        //note that every value from html is a string even when attribute restricts input as int, float, etc.
+        const { startDate, endDate, modelName, modelGrade, startPrice, endPrice, province, sortBy, sortOrder } = req.query;
 
         //since find(query) looks up the collection for all keys stated in query
         //the multiple if statements controls whether we look for product with only a certain key or multiple keys
+        if (startDate && endDate) {
+            //note that mongoDB automatically converts date to ISODate
+            query.timestamp = { $gte: new Date(dateStart), $lte: new Date(dateEnd) };
+        }
         if (modelName) {
             query.modelName = modelName;
         }
         if (modelGrade){
             query.modelGrade = modelGrade;
         }
-        if (priceStart && priceEnd) {
-            query.price = { $gte: parseFloat(priceStart), $lte: parseFloat(priceEnd)};
+        if (startPrice && endPrice) {
+            query.price = { $gte: Decimal128.fromString(startPrice), $lte: Decimal128.fromString(startPrice)};
         }
         if (province) {
             query.province = province;
         }
 
-        const results = await database.collection('gundam-models')
-            .find(query)
-            .sort({modelName: 1, modelGrade: 1, price: 1})   //model name and grade is sorted first before price
-            .toArray();
+        //control sorting priority
+        //if not chosen in html, sortBy is undefined which will use the default sort
+        if (sortBy) {
+            //determines whether the sort is ascending or descending
+            let order = 1;
+            //only change it when descending since it makes sense to default sort to ascending order
+            if (sortOrder == 'desc') {
+                order = -1;
+            }
 
+            if(sortBy == 'name') {
+                sortPriority = { modelName: order};
+            }
+            else if(sortBy == 'grade') {
+                sortPriority = { modelGrade: order};
+            }
+            else if(sortBy == 'price') {
+                sortPriority = { price: order};
+            }
+            else if(sortBy == 'date') {
+                sortPriority = { date: order };
+            }
+            else if(sortBy == 'province') {
+                sortPriority = { province: order };
+            }
+
+        }
+
+        //grabs from database
+        const results = await database.collection('gundam-models')
+                .find(query)
+                .sort(sortPriority)   //model name and grade is sorted first before price
+                .toArray();
+        
         res.render('search-results', { searchResults: results } );
 
     }
@@ -65,4 +105,4 @@ const getAllModels = async (req,res) => {
     }
 };
 
-export { getModel, getAllModels}
+export {getModel, getAllModels}

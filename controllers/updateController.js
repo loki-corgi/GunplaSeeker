@@ -1,22 +1,32 @@
+//needed in order to use Decimal128 for price
+import { Decimal128 } from 'mongodb';
+
 //routes for adding model into database
 const addModel = async (req, res) => {
     try {
         const database = req.apps.locals.database;
 
         const model = {
-            //set date to be start of date to only care about the day, month, year. might be useful if we want do something with the database that needs it
-            dateAdded: new Date().setUTCHours(0,0,0,0),
+            //note that mongoDB automatically converts date to ISODate
+            timestamp: new Date(),
             modelName: res.body.modelName,
             modelGrade: res.body.modelGrade,
-            price: req.body.price,
-            streetNumber: req.body.streetNumber,
+            //what this does is that req.body.price is a string
+            //then it is passed into Number to change it to a number
+            //then the toFixed(2) method from Number rounds the number to 2 decimal places and revert it back to string (toFixed() returns a string)
+            //then Decimal128.fromString() grabs the resulting string from toFixed(2) and convert it to Decimal128
+            price: Decimal128.fromString(Number(req.body.price).toFixed(2)),
+            streetNumber: parseInt(req.body.streetNumber),
             streetName: req.body.streetName,
             city: req.body.city,
             province: req.body.province
         };  
 
         await database.collection("gundam-models").insertOne(model);
-        res.render('index'  , { message: `Successfully added ${model.name}` });
+        //res.render('index'  , { message: `Successfully added ${model.name}` });
+
+        //when model is successfully added into database, redirect to index which will show the new listing with a message passed into query param
+        res.redirect(`/?msg=Successfully%20added%20${model.name}`);
     }
     catch (e) {
         console.dir(e, {depth: null});
