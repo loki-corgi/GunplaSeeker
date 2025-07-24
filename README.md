@@ -41,6 +41,7 @@ gunplaseeker/
    
   npm init -y
   npm install
+  
 4. start the server
 
   npm start
