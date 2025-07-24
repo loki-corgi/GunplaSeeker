@@ -44,6 +44,7 @@ gunplaseeker/
 4. start the server
 
   npm start
+  
 6. Open in browser:
 
   http://localhost:3000
