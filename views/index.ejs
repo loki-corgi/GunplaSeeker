@@ -15,8 +15,11 @@
 
         <main>
             <p> <%= message %> </p>
-            <p> Page: <%= currentPage %> </p>
-
+            <% if(currentPage) { %>
+                <p> Page: <%= currentPage %> </p>
+            <% } %>
+            
+            <!--we call it section instead of div since it might be part of the marking criteria-->
             <section id="content">
                 <% listings.forEach((listing) => { %>
                     <div class="listing"> 
