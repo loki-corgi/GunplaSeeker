@@ -22,7 +22,7 @@
                 <ul>
                     <% listings[letter].forEach(model => { %>
                         <li>
-                            <a href='/api/v1/all-listings?modelName=<%= encodeURIComponent(model.modelName) %>'>
+                            <a href='/api/v1/listings?modelName=<%= encodeURI(model.modelName) %>'>
                                 <%= model.modelName %>
                             </a> 
                             — <%= model.totalEntries %> entries

@@ -32,7 +32,32 @@ const addModel = async (req, res) => {
     //this catch is used when inputting into database produced some schema validation error
     catch (e) {
         console.dir(e, {depth: null});
-        res.render('error', { errors: [] });
+
+        //when error has a 121 code then try to get the error info from the error object
+        if (e.code == 121) {
+            
+            //stores the multiple possible schemaRule broken
+            const schemaRules = e.errorResponse.errInfo.details.schemaRulesNotSatisfied;
+
+            //finds either propertiesNotSatisfied or nothing which will then make this an empty array
+            const propertiesNotSatisfied = schemaRules.find(rule => rule.operatorName == "properties")
+                .propertiesNotSatisfied || [];
+
+            //do something here only when we grabbed propertiesNotSatisfied from schemaRules
+            if(propertiesNotSatisfied.length > 0) {
+
+                const errors = propertiesNotSatisfied.map(prop => ({
+                    field: prop.propertyName,
+                    message: prop.description
+                }));
+
+                res.status(500).render('error', { errors: errors });
+            }
+        }
+        else {
+            res.status(500).render('error', { errors: [{field: 'error', message: 'something went wrong'}] });
+        }
+        
     }
 };
 

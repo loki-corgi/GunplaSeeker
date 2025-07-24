@@ -1,5 +1,6 @@
 //needed in order to use Decimal128 for price
 import { Decimal128 } from 'mongodb';
+import querystring from 'querystring';
 
 //grab model data based on user input
 const getModels = async (req, res) => {
@@ -37,7 +38,12 @@ const getModels = async (req, res) => {
             query.timestamp = { $gte: sDate, $lte: eDate };
         }
         if (modelName) {
-            query.modelName = modelName;
+            //this makes the query search only partially
+            //so that even when typing in part of the name
+            //it will search for all models with that partial entry
+            query.modelName = { $regex: modelName.trim(), $options: 'i' } ;
+            
+
         }
         if (modelGrade){
             query.modelGrade = modelGrade;
@@ -137,11 +143,14 @@ const getAllModels = async (req,res) => {
             //we use this to display the name of the model as well as number of entries for that model in listings.ejs
             const listings = await database.collection('gundam-models')
                 .aggregate([
-                    {    
-                        $group: { _id: "$modelName", totalEntry: { $sum: 1 } }
-                    }]
-                )
-                .toArray();
+                {    
+                    $group: { _id: "$modelName", totalEntry: { $sum: 1 } }
+                },
+                //required, since it's not guaranteed list is sorted
+                {
+                    $sort: { _id: 1 }
+                }
+            ]).toArray();
 
             //now group each entry to the first character
             const groupedListings = {};
@@ -173,7 +182,7 @@ const getAllModels = async (req,res) => {
     //this catch is used only when there is an unexpected error with the searching the database
     catch (e) {
         console.dir(e, {depth: null});  //returns an object
-        res.render('error', {errors: []});
+        res.status(500).render('error', {errors: []});
     }
 };
 
