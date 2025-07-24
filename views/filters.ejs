@@ -1,7 +1,7 @@
 <script type="text/javascript" src="/js/filter.js"></script>
 
 <div id="sidebar">
-    <form action="/api/v1/get-models" method="get" id="search-form">
+    <form action="/api/v1/listings" method="get" id="search-form">
         <!-- Search -->
         <input type="text" name="modelName" placeholder="Search listings...">
         <button type="submit">Search</button>
@@ -47,20 +47,19 @@
             <!-- Price Range Sliders -->
             <div class="slider-container">
                 <label for="minPrice">Min Price: $<span id="min-price-display" class="value-display">0</span></label><br>
-                <input type="range" id="minPrice" min="0" max="10000" step="10" value="0" /><br>
+                <input type="range" id="minPrice"name='minPrice' min="0" max="1000" step="10" value="0" /><br>
             </div>
 
             <div class="slider-container">
                 <label for="maxPrice">Max Price: $<span id="max-price-display" class="value-display">1000</span></label><br>
-                <input type="range" id="maxPrice" min="0" max="10000" step="10" value="1000" /><br>
+                <input type="range" id="maxPrice" name="maxPrice" min="0" max="1010" step="10" value="1000" /><br>
             </div>
             <br>
 
             <!--Sort By-->
             <label for="sortBy">Sort By:</label>
-            <select name="sortOrder" id="sortOrder">
+            <select name="sortBy" id="sortBy">
                 <option value="name">Model Name</option>
-                <option value="grade">Model Grade</option>
                 <option value="grade">Model Grade</option>
                 <option value="grade">Price</option>
                 <option value="date">Date</option>

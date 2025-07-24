@@ -43,11 +43,17 @@ const getModels = async (req, res) => {
             query.modelGrade = modelGrade;
         }
         if (minPrice && maxPrice) {
-            if (minPrice > maxPrice) {  
+
+            if(parseInt(maxPrice) >= 1010) {
+                query.price = { $gte: Decimal128.fromString(minPrice)};
+            
+            }
+            else if (parseInt(minPrice) > parseInt(maxPrice)) {  
                 throw new Error('minPrice is greater than maxPrice');
             }
-
-            query.price = { $gte: Decimal128.fromString(minPrice), $lte: Decimal128.fromString(maxPrice)};
+            else {
+                query.price = { $gte: Decimal128.fromString(minPrice), $lte: Decimal128.fromString(maxPrice)};
+            }
         }
         if (province) {
             query.province = province;
@@ -102,9 +108,11 @@ const getModels = async (req, res) => {
         res.render('index', { message: `Search Results: ${count} Total listings` ,  listings: results, currentPage: page, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage } );
 
     }
+    //catches defined throw and errors from searching database
     catch (e) {
-        console.error(e);
-        res.status(500).render('index', { message: e.message, listings: [], currentPage: 1, hasNextPage: null, hasPreviousPage: null });
+        console.dir(e, {depth: null});
+
+        res.status(500).render('index', { message: e.message, listings: [], currentPage: null, hasNextPage: null, hasPreviousPage: null });
     }
 };
 
