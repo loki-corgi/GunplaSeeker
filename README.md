@@ -38,11 +38,14 @@ gunplaseeker/
 
 1. Get file from source
 2. install dependencies
+   
   npm init -y
   npm install
 4. start the server
+
   npm start
-5. Open in browser:
+6. Open in browser:
+
   http://localhost:3000
 
 ## Example POST Request
@@ -66,13 +69,18 @@ fetch("http://localhost:3000/api/v1/model", {
   })
 });
 
-valid Model Grades
+Valid Model Grades
+
 See full list in /database/collections.js
 
 ## Schema Validation Rules
 
     modelName: required, 1–50 chars
+    
     modelGrade: must match allowed enum
+    
     price: must be a valid decimal
+    
     streetNumber: integer ≥ 1
+    
     province: must be valid Canadian province code
