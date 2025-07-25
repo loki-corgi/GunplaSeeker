@@ -25,13 +25,21 @@ A full-stack web application to track, store, and view listings of Gundam model 
 ## Project Structure
 
 gunplaseeker/
+
 │
+
 ├── controllers/ # Logic for routes
+
 ├── database/ # database setup/schema
+
 ├── public/ # Static assets (CSS, fonts, etc.)
+
 ├── routes/ # Express route handlers
+
 ├── views/ # EJS templates
+
 ├── app.js # Main server file
+
 └── README.md # This file
 
 ## Setup & Installation
