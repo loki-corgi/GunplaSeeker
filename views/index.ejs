@@ -33,7 +33,22 @@
                 <% }) %>
             </section>
 
-            <!--we need a page navigation here-->
+            <!--only appears if the variables are not null-->
+            <% if (hasPreviousPage || hasNextPage) { %>
+                <nav id="page-nav">
+                    <ul class="page-list">
+                        <% if (hasPreviousPage) { %>
+                        <li><a class="page-link" href="?page=<%= currentPage - 1 %>&query=<%= query %>">Previous</a></li>
+                        <% } %>
+
+                        <li class="current-page">Page <%= currentPage %></li>
+
+                        <% if (hasNextPage) { %>
+                        <li><a class="page-link" href="?page=<%= currentPage + 1 %>&query=<%= query %>">Next</a></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
 
             <%- include('filters') %>
 
