@@ -1,6 +1,5 @@
 //needed in order to use Decimal128 for price
 import { Decimal128 } from 'mongodb';
-import querystring from 'querystring';
 
 //grab model data based on user input
 const getModels = async (req, res) => {
@@ -16,7 +15,7 @@ const getModels = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
 
         //set up pageSize for limiting displayed listings to 50 listing
-        const pageSize = 50;
+        const pageSize = 10;
 
         //handles which documents to skip
         const skip = (page - 1) * pageSize;
@@ -38,10 +37,16 @@ const getModels = async (req, res) => {
             query.timestamp = { $gte: sDate, $lte: eDate };
         }
         if (modelName) {
-            //this makes the query search only partially
-            //so that even when typing in part of the name
-            //it will search for all models with that partial entry
-            query.modelName = { $regex: modelName.trim(), $options: 'i' } ;
+            //we also need to escape special characters so that the regex doesn't complicate things
+
+            const normalizedSearch = modelName.trim()
+                // escape special chars
+                .replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&') 
+                // make quotes optional, note that there are special quote characters that we are excaping
+                .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?');   
+
+            //finally we also force the regex to consider only whole words
+            query.modelName = { $regex: `(^|\\s)${normalizedSearch}(\\s|$)`, $options: 'i' } ;
             
 
         }
@@ -109,16 +114,28 @@ const getModels = async (req, res) => {
         //handles pagination
         const hasNextPage = page * pageSize < count;
         const hasPreviousPage = page > 1;
+
+        const query2 = new URLSearchParams(query);
+        const queryString = new URLSearchParams(req.query).toString();
+
+        console.log('hasNextPage: ' + hasNextPage);
+        console.log('hasPreviousPage: ' + hasPreviousPage);
+        console.log('query: ');
+        console.log(query);
+        console.log('queryString: ');
+        console.log(queryString);
+        console.log('currentPage: ' + page);
         
         //reuse index.ejs for search result
-        res.render('index', { message: `Search Results: ${count} Total listings` ,  listings: results, currentPage: page, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage } );
+        //we send currentPage, nextPage, previousPage and query for pagination
+        res.render('index', { message: `Search Results: ${count} Total listings` ,  listings: results, currentPage: page, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage, query: query } );
 
     }
-    //catches defined throw and errors from searching database
+    //catches defined throw and errors from validation before searching database
     catch (e) {
         console.dir(e, {depth: null});
 
-        res.status(500).render('index', { message: e.message, listings: [], currentPage: null, hasNextPage: null, hasPreviousPage: null });
+        res.status(500).render('index', { message: e.message, listings: [], currentPage: null, hasNextPage: null, hasPreviousPage: null, query: null });
     }
 };
 
