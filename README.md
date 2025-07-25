@@ -42,6 +42,8 @@ gunplaseeker/
 
 └── README.md # This file
 
+---
+
 ## Setup & Installation
 
 1. Get file from source
@@ -57,6 +59,8 @@ gunplaseeker/
 6. Open in browser:
 
   http://localhost:3000
+
+---
 
 ## Example POST Request
 
@@ -82,6 +86,8 @@ fetch("http://localhost:3000/api/v1/model", {
 Valid Model Grades
 
 See full list in /database/collections.js
+
+---
 
 ## Schema Validation Rules
 
