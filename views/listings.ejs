@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        GunplaSeeker
+        GunplaSeeker - All Listings
     </title>
     <link rel="stylesheet" href="/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
@@ -14,15 +14,15 @@
     <%- include('header') %>
 
         <main>
-            <p> <%= message %> </p>
+            <p class="white"> <%= message %> </p>
 
             <section id="content">
                 <% Object.keys(listings).sort().forEach(letter => { %>
-                <h2><%= letter %></h2>
+                <h2 class="white"><%= letter %></h2>
                 <ul>
                     <% listings[letter].forEach(model => { %>
-                        <li>
-                            <a href='/api/v1/listings?modelName=<%= encodeURI(model.modelName) %>'>
+                        <li class="white">
+                            <a class="white" href='/api/v1/listings?modelName=<%= encodeURI(model.modelName) %>'>
                                 <%= model.modelName %>
                             </a> 
                             — <%= model.totalEntries %> entries

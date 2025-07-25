@@ -1,6 +1,6 @@
 import express from 'express';
-import { connection, database } from './database.js';
-import setupCollections from './collections.js';
+import { connection, database } from './database/database.js';
+import setupCollections from './database/collections.js';
 import indexRouter from './routes/index.js';
 
 const app = express();

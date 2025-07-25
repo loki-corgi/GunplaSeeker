@@ -14,13 +14,13 @@
     <%- include('header') %>
 
         <main>
-            <p> <%= message %> </p>
-            <% if(currentPage) { %>
-                <p> Page: <%= currentPage %> </p>
-            <% } %>
+        
+            <p class="white" id="page0"> Page: <%= currentPage ? currentPage: ''%> </p>
             
+
             <!--we call it section instead of div since it might be part of the marking criteria-->
             <section id="content">
+                <p class="white" id="message"> <%= message %> </p>
                 <% listings.forEach((listing) => { %>
                     <div class="listing"> 
                         <h2 class="model-name"><%= listing.modelName %></h2>
