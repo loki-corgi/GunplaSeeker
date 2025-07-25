@@ -23,18 +23,29 @@ header{
     justify-content: space-between;
 }
 nav{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-
-    align-content: center;
+    display: flex;
+    align-items: center;
     background-color: #2c52b3;
     height: 25%;
     bottom:0;
     border-bottom:2px solid black;
 }
+nav ul{
+        width:100%;
+        list-style-type: none;
+        color:black;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+
+}
 
 .nav{
     text-align: center;
+}
+
+.anchor{
+    text-decoration: none;
+    color:black;
 }
 header h1{
     padding: 0em 1em;
@@ -47,7 +58,7 @@ header h1{
 
 main{
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 2fr 5fr 2fr;
 }
 br{
     background-color: black;
@@ -85,6 +96,7 @@ footer{
     overflow:scroll;
     padding:0 1em 0 1em;
     max-height: 80vh;
+    
 }
 
 
@@ -120,5 +132,23 @@ footer{
 .link{
     text-decoration: none;
     color:black;
+}
+
+.white{
+    color:white;
+}
+
+#message{
+        text-align:center;
+}
+
+#page0{
+        text-align:left;
+        margin-left:1em;
+
+}
+
+#add-model-form{
+    background-color:beige;
 }
 
