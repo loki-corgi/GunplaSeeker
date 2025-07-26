@@ -22,7 +22,7 @@
             <section id="content">
                 <p class="white" id="message"> <%= message %> </p>
                 <% listings.forEach((listing) => { %>
-                    <div class="listing"> 
+                    <div class="listing <%= listing.modelGrade.toLowerCase().replace(/\s+/g,'-') %>"> 
                         <h2 class="model-name"><%= listing.modelName %></h2>
                         <p class="info">Grade: <%= listing.modelGrade %></p>
                         <p class="info">Price: $<%= listing.price %></p>
@@ -33,7 +33,22 @@
                 <% }) %>
             </section>
 
-            <!--we need a page navigation here-->
+            <!--only appears if the variables are not null-->
+            <% if (hasPreviousPage || hasNextPage) { %>
+                <nav id="page-nav">
+                    <ul class="page-list">
+                        <% if (hasPreviousPage) { %>
+                        <li><a class="page-link" href="?page=<%= currentPage - 1 %>&query=<%= query %>">Previous</a></li>
+                        <% } %>
+
+                        <li class="current-page">Page <%= currentPage %></li>
+
+                        <% if (hasNextPage) { %>
+                        <li><a class="page-link" href="?page=<%= currentPage + 1 %>&query=<%= query %>">Next</a></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
 
             <%- include('filters') %>
 
