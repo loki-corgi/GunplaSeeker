@@ -42,7 +42,7 @@ const getModels = async (req, res) => {
             const normalizedSearch = modelName.trim()
                 // escape special chars
                 .replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&') 
-                // make quotes optional, note that there are special quote characters that we are excaping
+                // make quotes optional, note that there are special quote characters
                 .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?');   
 
             //finally we also force the regex to consider only whole words
