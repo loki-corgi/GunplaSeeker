@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        GunplaSeeker
+    </title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <%- include('header') %>
+
+        <main>
+        
+            <p class="white" id="page0"> Page: <%= currentPage ? currentPage: ''%> </p>
+            
+
+            <!--we call it section instead of div since it might be part of the marking criteria-->
+            <section id="content">
+                <p class="white" id="message"> <%= message %> </p>
+                <% listings.forEach((listing) => { %>
+                    <div class="listing <%= listing.modelGrade.toLowerCase().replace(/\s+/g,'-') %>"> 
+                        <h2 class="model-name"><%= listing.modelName %></h2>
+                        <p class="info">Grade: <%= listing.modelGrade %></p>
+                        <p class="info">Price: $<%= listing.price %></p>
+                        <p class="info">Date added: <%= new Date(listing.timestamp).toDateString() %></p>
+                        <p class="info">Store Name: <%= listing.storeName %> </p>
+                        <p class="info">Location: <%= listing.streetNumber %> <%= listing.streetName %>, <%= listing.city %>, <%= listing.province %> </p>
+                    </div>
+                <% }) %>
+            </section>
+
+            <!--only appears if the variables are not null-->
+            <% if (hasPreviousPage || hasNextPage) { %>
+                <nav id="page-nav">
+                    <ul class="page-list">
+                        <% if (hasPreviousPage) { %>
+                        <li><a class="page-link" href="?page=<%= currentPage - 1 %>&query=<%= query %>">Previous</a></li>
+                        <% } %>
+
+                        <li class="current-page">Page <%= currentPage %></li>
+
+                        <% if (hasNextPage) { %>
+                        <li><a class="page-link" href="?page=<%= currentPage + 1 %>&query=<%= query %>">Next</a></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
+
+            <%- include('filters') %>
+
+        </main>
+
+        <%- include('footer') %>
+</body>
+</html>
