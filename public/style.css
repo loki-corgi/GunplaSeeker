@@ -1,154 +1,199 @@
-html, body{
-    height:100%;
-    margin:0;
-    background-color: black;
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: rgb(17, 17, 17);
     font-family: 'Orbitron', sans-serif;
-    overflow: hidden;
-
+    overflow-y: auto;
 }
 
-
-
-body{
+body {
     display: grid;
-    grid-template-rows: 1fr 5fr 0.25fr;
-    
+    grid-template-rows: auto 1fr auto;
 }
 
-
-header{
+/* Header */
+header {
     background-color: #fb2f38;
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 150px;
 }
-nav{
+
+header h1 {
+    padding: 0 1em;
+    margin: 0;
+}
+
+/* Navigation */
+nav {
     display: flex;
     align-items: center;
     background-color: #2c52b3;
-    height: 25%;
-    bottom:0;
-    border-bottom:2px solid black;
-}
-nav ul{
-        width:100%;
-        list-style-type: none;
-        color:black;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-
+    height: 60px;
+    border-bottom: 2px solid rgb(17, 17, 17);
 }
 
-.nav{
+nav ul {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.nav {
     text-align: center;
 }
 
-.anchor{
+.anchor, .link {
     text-decoration: none;
-    color:black;
-}
-header h1{
-    padding: 0em 1em;
+    color: black;
 }
 
-
-.head{
-    margin:0;
-}
-
-main{
+/* Main */
+main {
     display: grid;
-    grid-template-columns: 2fr 5fr 2fr;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 1em;
+    padding: 1em;
 }
-br{
-    background-color: black;
+
+#sidebar {
+    background-color: beige;
+    text-align: center;
+    border-radius: 15px
 }
 
+#content {
+    display: grid;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 0 1em;
+    max-height: 80vh;
+    grid-template-columns: 1fr;
+}
 
+.listing {
+    text-align: center;
+    padding: 1em;
+    width: 100%;
+    max-width: 40em;
+    height: 20em;
+    transition: transform 0.3s ease;
+    margin: 1em auto 0 auto;
+    border-radius: 15px
+    
+}
 
-footer{
+.listing:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     background-color: gainsboro;
     justify-content: center;
     align-content: center;
-
 }
 
-.foot{
+.foot {
     text-align: center;
 }
 
-#about{
+#about {
     text-align: center;
 }
 
-#sidebar{
-    background-color: beige;
-
-}
-
-#content{
-    display: grid;
-    grid-template-columns: auto;
-    justify-content: center;
-    grid-template-rows: auto;
-    overflow:scroll;
-    padding:0 1em 0 1em;
-    max-height: 80vh;
-    
-}
-
-
-
-.listing{
-    text-align: center;
-    background-color: oldlace;
-    padding:1em;
-    width: 40em;
-    height: 20em;
-    transition: transform 0.3s ease;
-    margin:1em 1em 0em 1em;
-}
-
-.listing:hover{
-    transform:scale(1.05);
-}
-
-#sidebar{
-    text-align: center;
-}
-
-#top{
-    flex:1;
+#top {
+    flex: 1;
     display: flex;
     align-items: center;
 }
 
-#about-us, #contact-us{
-    color:white;
+#about-us, #contact-us {
+    color: white;
 }
 
-.link{
-    text-decoration: none;
-    color:black;
+.white {
+    color: rgb(242, 242, 145);
 }
 
-.white{
-    color:white;
+#message {
+    text-align: center;
 }
 
-#message{
-        text-align:center;
+#page0 {
+    text-align: left;
+    margin-left: 1em;
 }
 
-#page0{
-        text-align:left;
-        margin-left:1em;
+#add-model-form {
+    background-color: beige;
+    border-radius: 15px;
+    padding:1em;
 
 }
 
-#add-model-form{
-    background-color:beige;
+@media (max-width: 768px) {
+    nav ul {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    footer {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .listing {
+        width: 90%;
+        height: auto;
+    }
+
+    #content {
+        padding: 0.5em;
+    }
 }
 
+.beige{
+    background-color: beige;
+}
+
+a:hover{
+    color:red;
+}
+
+input{
+        border: 1px solid black;
+       
+}
+
+#model-name{
+    margin-top:1em;
+}
+
+.list{
+        border-radius: 15px
+
+}
+
+.advance-grade{
+    background-color: rgb(204, 229, 255);
+}
+
+.entry-grade{
+	background-color: rgb(73, 203, 235);
+}
+
+.high-grade{
+    background-color: rgb(220, 60, 60);
+}
