@@ -140,11 +140,6 @@ const getModels = async (req, res) => {
         const hasNextPage = page * pageSize < count;
         const hasPreviousPage = page > 1;
 
-        const query2 = new URLSearchParams(query);
-        const queryString = new URLSearchParams(req.query).toString();
-
-
-        
         //reuse index.ejs for search result
         //we send currentPage, nextPage, previousPage and query for pagination
         res.render('index', { message: `Search Results: ${count} 
@@ -183,7 +178,7 @@ const getAllModels = async (req,res) => {
 
         //if no data in collection then just show that there is no entries to list
         if(count == 0) { 
-            res.render('listings', { message: `No Entries`, listings: { } });
+            return res.render('listings', { message: `No Entries`, listings: { } });
         }
         else {
 

@@ -12,7 +12,7 @@ const addModel = async (req, res) => {
             modelName: req.body.modelName,
             modelGrade: req.body.modelGrade,
             //what this does is that req.body.price is a string
-            //then it is passed into Number to change it to a number
+            //then it is passed into Number to change it to a number, if possible
             //then the toFixed(2) method from Number rounds the number to 2 decimal places and revert it back to string (toFixed() returns a string)
             //then Decimal128.fromString() grabs the resulting string from toFixed(2) and convert it to Decimal128
             price: Decimal128.fromString(Number(req.body.price).toFixed(2)),
@@ -58,6 +58,7 @@ const addModel = async (req, res) => {
                     message: 'something other than propertiesNotSatisfied has been found'}] });
             }
         }
+        //this runs when the error is not from mongodb schema validation
         else {
             res.status(400).render('error', { errors: [{field: 'error', message: 'something went wrong'}] });
         }
