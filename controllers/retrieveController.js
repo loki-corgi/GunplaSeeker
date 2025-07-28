@@ -167,7 +167,6 @@ const getModels = async (req, res) => {
         // therefore, status code 500
         if(e.statusCode == 500) {
             res.locals.errors.push({ field: `Error`, message: e.message });
-            res.status(e.statusCode).render('error', res.locals.errors);
         }
 
         res.status(e.statusCode).render('error', res.locals.errors);

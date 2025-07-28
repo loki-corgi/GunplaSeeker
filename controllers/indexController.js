@@ -27,4 +27,12 @@ const form = (req, res) => {
     res.render('form', { message: null });
 }
 
-export { indexListing, form };
+//handles all other routes and display the error page
+const invalidRoutes = async (req, res) => {
+  
+    res.status(404).render('error', { errors: [{field: '404', message: 'Page not found.'}] } );
+
+}
+
+
+export { indexListing, form, invalidRoutes };
