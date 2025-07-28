@@ -1,7 +1,7 @@
 //needed in order to use Decimal128 for price
 import { Decimal128 } from 'mongodb';
 
-//routes for adding model into database
+//route for adding model listing into database
 const addModel = async (req, res) => {
     try {
         const database = req.app.locals.database;
@@ -51,11 +51,15 @@ const addModel = async (req, res) => {
                     message: prop.description
                 }));
 
-                res.status(500).render('error', { errors: errors });
+                res.status(400).render('error', { errors: errors });
+            }
+            else {
+                res.status(400).render('error', { errors: [{ field: 'error', 
+                    message: 'something other than propertiesNotSatisfied has been found'}] });
             }
         }
         else {
-            res.status(500).render('error', { errors: [{field: 'error', message: 'something went wrong'}] });
+            res.status(400).render('error', { errors: [{field: 'error', message: 'something went wrong'}] });
         }
         
     }
