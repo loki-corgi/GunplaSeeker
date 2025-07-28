@@ -92,7 +92,6 @@ const getModels = async (req, res) => {
         }
         
         let sortOption = 'modelName';
-        let order = 1;
 
         //control sorting priority
         //if not chosen in html, sortBy is undefined which will use the default sort
