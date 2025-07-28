@@ -22,7 +22,7 @@
             <section id="content">
                 <p class="white" id="message"> <%= message %> </p>
                 <% listings.forEach((listing) => { %>
-                    <div class="listing"> 
+                    <div class="listing <%= listing.modelGrade.toLowerCase().replace(/\s+/g,'-') %>"> 
                         <h2 class="model-name"><%= listing.modelName %></h2>
                         <p class="info">Grade: <%= listing.modelGrade %></p>
                         <p class="info">Price: $<%= listing.price %></p>

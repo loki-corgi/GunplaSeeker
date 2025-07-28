@@ -118,13 +118,7 @@ const getModels = async (req, res) => {
         const query2 = new URLSearchParams(query);
         const queryString = new URLSearchParams(req.query).toString();
 
-        console.log('hasNextPage: ' + hasNextPage);
-        console.log('hasPreviousPage: ' + hasPreviousPage);
-        console.log('query: ');
-        console.log(query);
-        console.log('queryString: ');
-        console.log(queryString);
-        console.log('currentPage: ' + page);
+
         
         //reuse index.ejs for search result
         //we send currentPage, nextPage, previousPage and query for pagination
@@ -134,7 +128,6 @@ const getModels = async (req, res) => {
     //catches defined throw and errors from validation before searching database
     catch (e) {
         console.dir(e, {depth: null});
-
         res.status(500).render('index', { message: e.message, listings: [], currentPage: null, hasNextPage: null, hasPreviousPage: null, query: null });
     }
 };
@@ -198,7 +191,7 @@ const getAllModels = async (req,res) => {
     }
     //this catch is used only when there is an unexpected error with the searching the database
     catch (e) {
-        console.dir(e, {depth: null});  //returns an object
+        console.dir(e, {depth: null});
         res.status(500).render('error', {errors: []});
     }
 };
