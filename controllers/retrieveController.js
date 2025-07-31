@@ -36,30 +36,24 @@ const getModels = async (req, res) => {
         //the multiple if statements controls whether we look for product with 
         // only a certain key or multiple keys
 
+
+
+        //store dates into Date object
+        const sDate = new Date(startDate);
+        //Note: We set the end Date to be the very last ms to cover the whole day of the date
+        const eDate = new Date(endDate)
+        eDate.setUTCHours(23, 59, 59, 999);
+
         if (startDate && endDate) {
-
-            //store dates into Date object
-            const sDate = new Date(startDate);
-            const eDate = new Date(endDate);
-            
-            //when the dates are the same, we set the end date to be at the end of the day
-            if(startDate == endDate) {
-                eDate.setUTCHours(23, 59, 59, 999);
-            }
-
-            console.log('at start and end date')
-            console.log(eDate);
-
             query.timestamp = { $gte: sDate, $lte: eDate };
         }
         else if (startDate){
-            const sDate = new Date(startDate);
             query.timestamp = { $gte: sDate };
         }
         else if (endDate){
-            const eDate = new Date(endDate);
             query.timestamp = { $lte: eDate };
         }
+
         if (modelName) {
             //we also need to escape special characters so that the regex doesn't complicate things
 
