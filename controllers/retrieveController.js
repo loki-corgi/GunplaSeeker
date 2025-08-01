@@ -3,7 +3,16 @@ import { Decimal128 } from 'mongodb';
 
 //grab model data based on user input
 const getModels = async (req, res) => {
+
     try {
+
+        if(res.locals.errors.length > 0) {
+            const error = new Error('Validation Error');
+            error.statusCode = 400;
+
+            throw error;
+        }
+
         const database = req.app.locals.database;
 
         let query = {};
@@ -24,18 +33,27 @@ const getModels = async (req, res) => {
         const { startDate, endDate, modelName, modelGrade, minPrice, maxPrice, province, sortBy, sortOrder } = req.query;
 
         //since find(query) looks up the collection for all keys stated in query
-        //the multiple if statements controls whether we look for product with only a certain key or multiple keys
-        if (startDate && endDate) {
-            //store dates into Date object
-            const sDate = new Date(startDate);
-            const eDate = new Date(endDate);
+        //the multiple if statements controls whether we look for product with 
+        // only a certain key or multiple keys
 
-            //if startDate was greater than endDate then throw error
-            if (sDate.getTime() > eDate.getTime()) {
-                throw new Error('startDate greater than endDate');
-            }
+
+
+        //store dates into Date object
+        const sDate = new Date(startDate);
+        //Note: We set the end Date to be the very last ms to cover the whole day of the date
+        const eDate = new Date(endDate)
+        eDate.setUTCHours(23, 59, 59, 999);
+
+        if (startDate && endDate) {
             query.timestamp = { $gte: sDate, $lte: eDate };
         }
+        else if (startDate){
+            query.timestamp = { $gte: sDate };
+        }
+        else if (endDate){
+            query.timestamp = { $lte: eDate };
+        }
+
         if (modelName) {
             //we also need to escape special characters so that the regex doesn't complicate things
 
@@ -59,9 +77,6 @@ const getModels = async (req, res) => {
                 query.price = { $gte: Decimal128.fromString(minPrice)};
             
             }
-            else if (parseInt(minPrice) > parseInt(maxPrice)) {  
-                throw new Error('minPrice is greater than maxPrice');
-            }
             else {
                 query.price = { $gte: Decimal128.fromString(minPrice), $lte: Decimal128.fromString(maxPrice)};
             }
@@ -69,6 +84,8 @@ const getModels = async (req, res) => {
         if (province) {
             query.province = province;
         }
+        
+        let sortOption = 'modelName';
 
         //control sorting priority
         //if not chosen in html, sortBy is undefined which will use the default sort
@@ -80,22 +97,24 @@ const getModels = async (req, res) => {
                 order = -1;
             }
 
+            //if sortBy has none of these strings then sort is defaulted not sorted at all
             if(sortBy == 'name') {
-                sortPriority = { modelName: order};
+                sortOption = 'modelName';
             }
             else if(sortBy == 'grade') {
-                sortPriority = { modelGrade: order};
+                sortOption = 'modelGrade';
             }
             else if(sortBy == 'price') {
-                sortPriority = { price: order};
+                sortOption = 'price';
             }
             else if(sortBy == 'date') {
-                sortPriority = { timestamp: order };
+                sortOption = 'timestamp';
             }
             else if(sortBy == 'province') {
-                sortPriority = { province: order };
+                sortOption = 'province';
             }
 
+            sortPriority = { [sortOption]: order };
         }
 
         //grabs from database
@@ -115,20 +134,30 @@ const getModels = async (req, res) => {
         const hasNextPage = page * pageSize < count;
         const hasPreviousPage = page > 1;
 
-        const query2 = new URLSearchParams(query);
-        const queryString = new URLSearchParams(req.query).toString();
-
-
-        
         //reuse index.ejs for search result
         //we send currentPage, nextPage, previousPage and query for pagination
-        res.render('index', { message: `Search Results: ${count} Total listings` ,  listings: results, currentPage: page, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage, query: query } );
+        res.render('index', { message: `Search Results: ${count} 
+            Total listings` ,  
+            listings: results, 
+            currentPage: page, 
+            hasNextPage: hasNextPage, 
+            hasPreviousPage: 
+            hasPreviousPage, 
+            query: query } );
 
     }
     //catches defined throw and errors from validation before searching database
+    //otherwise, will display some error while handling code
     catch (e) {
-        console.dir(e, {depth: null});
-        res.status(500).render('index', { message: e.message, listings: [], currentPage: null, hasNextPage: null, hasPreviousPage: null, query: null });
+        console.error(e);
+
+        // if this triggers, that means something in our code failed
+        // therefore, status code 500
+        if(e.statusCode == 500) {
+            res.locals.errors.push({ field: `Error`, message: e.message });
+        }
+
+        res.status(e.statusCode).render('error', res.locals.errors);
     }
 };
 
@@ -143,7 +172,7 @@ const getAllModels = async (req,res) => {
 
         //if no data in collection then just show that there is no entries to list
         if(count == 0) { 
-            res.render('listings', { message: `No Entries`, listings: { } });
+            return res.render('listings', { message: `No Entries`, listings: { } });
         }
         else {
 
@@ -192,7 +221,7 @@ const getAllModels = async (req,res) => {
     //this catch is used only when there is an unexpected error with the searching the database
     catch (e) {
         console.dir(e, {depth: null});
-        res.status(500).render('error', {errors: []});
+        res.status(500).render('error', { errors: [{field: 'error', message: 'something unexpected happened'}] });
     }
 };
 

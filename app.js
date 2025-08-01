@@ -14,6 +14,7 @@ connection
   server = app.listen(3000, ()=>console.log('Server listening.'));
 
   app.locals.database = database;
+
 })
 .catch(e=>console.error(e));
 

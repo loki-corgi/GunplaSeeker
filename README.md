@@ -60,6 +60,10 @@ gunplaseeker/
 
   http://localhost:3000
 
+Also rendered at
+
+https://gunplaseeker.onrender.com/
+
 ---
 
 ## Example POST Request
@@ -91,12 +95,15 @@ See full list in /database/collections.js
 
 ## Schema Validation Rules
 
-    modelName: required, 1–50 chars
-    
-    modelGrade: must match allowed enum
-    
-    price: must be a valid decimal
-    
-    streetNumber: integer ≥ 1
-    
-    province: must be valid Canadian province code
+| **Field**        | **Required** | **Validation Rules**                                            |
+| ---------------- | ------------ | --------------------------------------------------------------- |
+| **modelName**    | Yes          | String, 1–50 characters                                         |
+| **modelGrade**   | Yes          | Must match one of the allowed enum values                       |
+| **price**        | Yes          | Must be a valid decimal number                                  |
+| **storeName**    | No          | String, 2–40 characters                                         |
+| **streetNumber** | Yes          | Integer, ≥ 1                                                    |
+| **streetName**   | Yes          | String, 2–40 characters                                         |
+| **city**         | Yes          | String, 3–40 characters                                         |
+| **province**     | No           | Must match a valid Canadian province code (e.g., ON, QC, BC...) |
+
+Note: We force storeName value in our form for the client, however, it is not required as shown in the table above

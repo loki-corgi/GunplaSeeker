@@ -17,12 +17,14 @@
         
         <h2>Error</h2>
         
-        <dl>
-            <% errors.forEach(error => { %>
-            <dt><%= error.field %></dt>
-            <dd><%= error.message %></dd>
-            <% }) %>
-        </dl>
+        <section class="error-container">
+            <dl>
+                <% errors.forEach(error => { %>
+                <dt><%= error.field %></dt>
+                <dd><%= error.message %></dd>
+                <% }) %>
+            </dl>
+        </section>
         <%- include('filters') %>
         
     </main>
