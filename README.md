@@ -87,6 +87,28 @@ fetch("http://localhost:3000/api/v1/model", {
   })
 });
 
+Use to fetch a json from api
+
+fetch("http://localhost:3000/api/v1/model", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    modelName: "RX-78-2",
+    modelGrade: "High Grade",
+    price: "29.99",
+    storeName: "Hobby Planet",
+    streetNumber: "123",
+    streetName: "Model Ave",
+    city: "Toronto",
+    province: "ON"
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(err => console.error(err));
+
 Valid Model Grades
 
 See full list in /database/collections.js
