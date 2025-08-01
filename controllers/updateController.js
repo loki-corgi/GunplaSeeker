@@ -17,17 +17,18 @@ const addModel = async (req, res) => {
             //then Decimal128.fromString() grabs the resulting string from toFixed(2) and convert it to Decimal128
             price: Decimal128.fromString(Number(req.body.price).toFixed(2)),
             streetNumber: parseInt(req.body.streetNumber),
-            storeName: req.body.storeName,
             streetName: req.body.streetName,
             city: req.body.city,
             province: req.body.province
         };  
 
+        // Only add storeName if it exists and passes length check
+        if (req.body.storeName && req.body.storeName.length >= 2) {
+            model.storeName = req.body.storeName;
+        }
+
         await database.collection("gundam-models").insertOne(model);
         res.render('form'  , { message: `Successfully added ${model.modelName}` });
-
-        //when model is successfully added into database, redirect to index which will show the new listing with a message passed into query param
-        //res.redirect(`/?msg=Successfully+added+${model.name}`);
     }
     //this catch is used when inputting into database produced some schema validation error
     catch (e) {
