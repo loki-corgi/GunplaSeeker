@@ -105,3 +105,5 @@ See full list in /database/collections.js
 | **streetName**   | Yes          | String, 2–40 characters                                         |
 | **city**         | Yes          | String, 3–40 characters                                         |
 | **province**     | No           | Must match a valid Canadian province code (e.g., ON, QC, BC...) |
+
+Note: We force storeName value in our form for the client, however, it is not required as shown in the table above
