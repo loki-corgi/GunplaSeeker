@@ -31,7 +31,7 @@ const addModel = async (req, res) => {
         const database = req.app.locals.database;
 
         const normalizedName = req.body.modelName.trim()
-            // escape special chars (except hyphen) 
+            // escape quotes
             .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?')
             .toUpperCase();
 
@@ -222,5 +222,6 @@ const addModel = async (req, res) => {
 };
 
 export { addModel };
+
 
 */
