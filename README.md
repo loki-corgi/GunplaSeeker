@@ -60,6 +60,10 @@ gunplaseeker/
 
   http://localhost:3000
 
+Also rendered at
+
+https://gunplaseeker.onrender.com/
+
 ---
 
 ## Example POST Request
