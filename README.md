@@ -50,6 +50,7 @@ gunplaseeker/
 2. install dependencies
    
   npm init -y
+  
   npm install
   
 4. start the server
