@@ -95,18 +95,13 @@ See full list in /database/collections.js
 
 ## Schema Validation Rules
 
-    modelName: required, 1–50 chars
-    
-    modelGrade: required, must match allowed enum
-    
-    price: required, must be a valid decimal
-
-    storeName: required, 2-40 chars
-    
-    streetNumber: required, integer ≥ 1
-
-    streetName: required, 2-40 chars
-
-    city: required, 3-40 chars
-    
-    province: must be valid Canadian province code
+| **Field**        | **Required** | **Validation Rules**                                            |
+| ---------------- | ------------ | --------------------------------------------------------------- |
+| **modelName**    | Yes          | String, 1–50 characters                                         |
+| **modelGrade**   | Yes          | Must match one of the allowed enum values                       |
+| **price**        | Yes          | Must be a valid decimal number                                  |
+| **storeName**    | Yes          | String, 2–40 characters                                         |
+| **streetNumber** | Yes          | Integer, ≥ 1                                                    |
+| **streetName**   | Yes          | String, 2–40 characters                                         |
+| **city**         | Yes          | String, 3–40 characters                                         |
+| **province**     | No           | Must match a valid Canadian province code (e.g., ON, QC, BC...) |
