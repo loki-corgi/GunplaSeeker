@@ -87,7 +87,7 @@ fetch("http://localhost:3000/api/v1/model", {
   })
 });
 
-Use to fetch a json from api
+Use to fetch a json from api":
 
 fetch("http://localhost:3000/api/v1/model", {
   method: "POST",
