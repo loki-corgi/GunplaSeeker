@@ -97,10 +97,16 @@ See full list in /database/collections.js
 
     modelName: required, 1–50 chars
     
-    modelGrade: must match allowed enum
+    modelGrade: required, must match allowed enum
     
-    price: must be a valid decimal
+    price: required, must be a valid decimal
+
+    storeName: required, 2-40 chars
     
-    streetNumber: integer ≥ 1
+    streetNumber: required, integer ≥ 1
+
+    streetName: required, 2-40 chars
+
+    city: required, 3-40 chars
     
     province: must be valid Canadian province code
