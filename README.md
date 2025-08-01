@@ -100,7 +100,7 @@ See full list in /database/collections.js
 | **modelName**    | Yes          | String, 1–50 characters                                         |
 | **modelGrade**   | Yes          | Must match one of the allowed enum values                       |
 | **price**        | Yes          | Must be a valid decimal number                                  |
-| **storeName**    | Yes          | String, 2–40 characters                                         |
+| **storeName**    | No          | String, 2–40 characters                                         |
 | **streetNumber** | Yes          | Integer, ≥ 1                                                    |
 | **streetName**   | Yes          | String, 2–40 characters                                         |
 | **city**         | Yes          | String, 3–40 characters                                         |
