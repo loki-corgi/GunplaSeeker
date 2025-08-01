@@ -1,21 +1,39 @@
 const setupCollections = database => {
 
-    let modelCollection = database.createCollection('gundam-models', {
+    //stores the modelName
+    let modelCollection = database.createCollection('gundam-models-list', {
+        validator: {
+            $jsonSchema: {
+                bsonType: 'object',
+                title: 'Gundam Model Info Collection',
+                required: ['modelName'],
+                properties: {
+                    modelName: {
+                        bsonType: 'string',
+                        minLength: 1,
+                        maxLength: 50,
+                        description: 'Model Name must be between 1 and 50 characters'
+                    }
+                }
+            }
+        }
+    });
+
+    //stores the listing of models
+    let listingCollection = database.createCollection('gundam-listings', {
         validator: {
             $jsonSchema: {
                 bsonType: 'object',
                 title: 'Gundam Model Object Collection',
-                required: [ 'timestamp', 'modelName', 'modelGrade', 'price', 'streetNumber', 'streetName', 'city', 'province' ],
+                required: [ 'timestamp', 'model_Id', 'modelGrade' ,  'price', 'storeName', 'streetNumber', 'streetName', 'city', 'province' ],
                 properties: {
                     timestamp: {
                         bsonType: 'date',
                         description: "must be a Date object"
                     },
-                    modelName: {
-                        bsonType: 'string',
-                        minLength: 1,
-                        maxLength: 50,
-                        description: 'Model Name that must be a string between 1 and 50 characters long'
+                    model_Id: {
+                        bsonType: 'objectId',
+                        description: 'Reference to the gundam-model document'
                     },
                     modelGrade: {
                         bsonType: 'string',
@@ -24,7 +42,7 @@ const setupCollections = database => {
                             'Hyper Hybrids Model', 'Limited Model', 'Mega Size', 'Master Grade', 'Master Grade Extreme', 'Master Grade Super-Deformed',
                             'No-Grade', 'Perfect Grade', 'Reborn-One Hundred', 'Real Grade', 'Super-Deformed Extreme', 'Super Grade Collection'
                         ],
-                        description: 'Model Grade must be a valid grade'
+                        description: 'Must be a valid model grade'
                     },
                     price: {
                         bsonType: 'decimal',

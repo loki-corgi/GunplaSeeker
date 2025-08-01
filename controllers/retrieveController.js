@@ -2,7 +2,34 @@
 import { Decimal128 } from 'mongodb';
 
 //grab model data based on user input
-const getModels = async (req, res) => {
+//validation for getting model listing
+const getListings = async (req, res) => {
+
+    // API fetch request consideration and how to manage it
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //Note: ? after headers['content-type'] is required just in case the fetch api 
+    // does not include content-type in headers field
+    //basically ensures an undefined or null value instead of an error
+    //when an undefined value is passed into includes method
+    const isFetchRequest = req.headers['content-type']?.includes('application/json');
+
+    //logic for handling response
+    const sendSuccessResponse = (res, isFetchRequest, message) => {
+        if (isFetchRequest) {
+            res.status(201).json(message);
+        } else {
+            res.status(201).render('index', message );
+        }
+    };
+    const sendErrorResponse = (res, isFetchRequest, statusCode, message) => {
+        if (isFetchRequest) {
+            res.status(statusCode).json(message);
+        } else {
+            res.status(statusCode).render('error', { errors: message });
+        }
+    };
+    
+    //-----------------------------------------------------------------------------------------
 
     try {
 
@@ -15,15 +42,18 @@ const getModels = async (req, res) => {
 
         const database = req.app.locals.database;
 
+        //stores the query to be used in $match inside aggregate method
         let query = {};
+
         //default sort, priorities time before name
         let sortPriority = {timestamp: -1, modelName: 1};
 
         //set up page number using query string
         //the || 1 ensures that there is at least 1 page
+        //if parseInt(req.query.page) is undefined
         const page = parseInt(req.query.page) || 1;
 
-        //set up pageSize for limiting displayed listings to 50 listing
+        //set up pageSize for limiting displayed listings to 10 listing
         const pageSize = 10;
 
         //handles which documents to skip
@@ -32,44 +62,35 @@ const getModels = async (req, res) => {
         //note that every value from html is a string even when attribute restricts input as int, float, etc.
         const { startDate, endDate, modelName, modelGrade, minPrice, maxPrice, province, sortBy, sortOrder } = req.query;
 
-        //since find(query) looks up the collection for all keys stated in query
-        //the multiple if statements controls whether we look for product with 
-        // only a certain key or multiple keys
+        //-----------------------------------------------------------------------------------------
 
-
+        //build query for $match in aggregate
 
         //store dates into Date object
         const sDate = new Date(startDate);
-        //Note: We set the end Date to be the very last ms to cover the whole day of the date
-        const eDate = new Date(endDate)
-        eDate.setUTCHours(23, 59, 59, 999);
+        const eDate = new Date(endDate);
+        //ensures that we only set hours if there is an eDate object
+        if(eDate) {
+            //Note: We set the end Date to be the very last ms to cover the whole day of the date
+            eDate.setUTCHours(23, 59, 59, 999);
 
+        }
         if (startDate && endDate) {
             query.timestamp = { $gte: sDate, $lte: eDate };
         }
-        else if (startDate){
+        else if (startDate) {
             query.timestamp = { $gte: sDate };
         }
-        else if (endDate){
+        else if (endDate) {
             query.timestamp = { $lte: eDate };
         }
 
-        if (modelName) {
-            //we also need to escape special characters so that the regex doesn't complicate things
+        //its possible for modelGrade to be an array
+        //however, our filter from the client will not send an array here
+        if (modelGrade) {
 
-            const normalizedSearch = modelName.trim()
-                // escape special chars
-                .replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&') 
-                // make quotes optional, note that there are special quote characters
-                .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?');   
-
-            //finally we also force the regex to consider only whole words
-            query.modelName = { $regex: `(^|\\s)${normalizedSearch}(\\s|$)`, $options: 'i' } ;
-            
-
-        }
-        if (modelGrade){
-            query.modelGrade = modelGrade;
+            //ensures an array is used to search the query
+            query.modelGrade = Array.isArray(modelGrade) ? { $in: modelGrade } : { $in: [modelGrade] };
         }
         if (minPrice && maxPrice) {
 
@@ -84,6 +105,30 @@ const getModels = async (req, res) => {
         if (province) {
             query.province = province;
         }
+        //modelName here has a different logic to the rest of the query logic
+        if (modelName && modelName.trim() != '') {
+            //we need to escape special characters so that the regex doesn't complicate things
+            const normalizedSearch = modelName.trim()
+                // escape special chars
+                .replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&') 
+                // make quotes optional, note that there are special quote characters
+                .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?');   
+
+            //finally we also force the regex to consider only whole words
+            const modelCollectionQuery = { modelName: { $regex: `(^|\\s)${normalizedSearch}(\\s|$)`, $options: 'i' }} ;
+
+            //we get the model documents based on the regex query
+            const models = await database.collection('gundam-models-list').find(modelCollectionQuery).toArray();
+            
+            //if models exist
+            if (models.length > 0) {
+                //Map the modelName of each matching model into modelNames
+                query.model_Id = { $in: models.map(model => model._id) };
+            } else {
+                //If no models found, force no matches by setting modelNames to an empty array
+                query.model_Id = { $in: [] };
+            }
+        }
         
         let sortOption = 'modelName';
 
@@ -91,11 +136,7 @@ const getModels = async (req, res) => {
         //if not chosen in html, sortBy is undefined which will use the default sort
         if (sortBy) {
             //determines whether the sort is ascending or descending
-            let order = 1;
-            //only change it when descending since it makes sense to default sort to ascending order
-            if (sortOrder == 'desc') {
-                order = -1;
-            }
+            let order = (sortOrder === 'desc') ? -1 : 1;
 
             //if sortBy has none of these strings then sort is defaulted not sorted at all
             if(sortBy == 'name') {
@@ -117,18 +158,61 @@ const getModels = async (req, res) => {
             sortPriority = { [sortOption]: order };
         }
 
-        //grabs from database
-        const results = await database.collection('gundam-models')
-                .find(query)
-                .sort(sortPriority) //model name and grade is sorted first before price
-                .skip(skip)         //skips (page -1) * 50
-                .limit(pageSize)    //limits to 50 listing
-                .toArray();
+        //stores the total number of matches into count for pagination
+        const countDoc = await database.collection('gundam-listings').aggregate([
+                { $match: query },
+                { $count: 'totalCount' }
+            ]).toArray();
+        
+        //ensure either a countDoc has an Array of object or count variable is set to 0
+        const count = countDoc[0]?.totalCount || 0;
 
-        //stores total number of documents in collection
-        //we don't use Array.length because the array we grabbed and store in results is not the entire listing
-        const count = await database.collection('gundam-models')
-                .countDocuments(query);
+        const results = await database.collection('gundam-listings').aggregate(
+            [
+                {
+                    $lookup: {
+                        from: 'gundam-models-list',
+                        localField: 'model_Id',
+                        foreignField: '_id',
+                        as: 'modelInfo'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$modelInfo",   // Unwind the modelInfo array to work with individual documents
+                        //this is required, otherwise, the query will just ignore the modelName when matching documents
+                        //basically the query would brake
+                        preserveNullAndEmptyArrays: true  
+                    }
+                },
+                {
+                    $match: query
+                },
+                { 
+                    $sort: sortPriority 
+                },
+                //Handles which listings to grab
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: pageSize
+                },
+                {
+                    $project: {
+                        timestamp: true,
+                        modelName: '$modelInfo.modelName',
+                        modelGrade: true,
+                        price: true,
+                        storeName: true,
+                        streetNumber: true,
+                        streetName: true,
+                        city: true,
+                        province: true
+                    }
+                }
+            ]
+        ).toArray();
 
         //handles pagination
         const hasNextPage = page * pageSize < count;
@@ -150,36 +234,64 @@ const getModels = async (req, res) => {
     //otherwise, will display some error while handling code
     catch (e) {
         console.error(e);
+        console.dir(e, {depth: null});
+
+        const error = { field: 'Error', message: e.message };
+
+        //ensure status code exists to parse into sendErrorResponse
+        const statusCode = e.statusCode || 500; 
 
         // if this triggers, that means something in our code failed
         // therefore, status code 500
-        if(e.statusCode == 500) {
-            res.locals.errors.push({ field: `Error`, message: e.message });
+        if(statusCode == 500) {
+            res.locals.errors.push(error);
         }
 
-        res.status(e.statusCode).render('error', res.locals.errors);
+        sendErrorResponse(res, isFetchRequest, parseInt(statusCode), res.locals.errors);
+
     }
 };
 
-const getAllModels = async (req,res) => {
+const getAllListings = async (req,res) => {
+
+    // API fetch request consideration and how to manage it
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //Note: ? after headers['content-type'] is required just in case the fetch api 
+    // does not include content-type in headers field
+    //basically ensures an undefined or null value instead of an error
+    //when an undefined value is passed into includes method
+    const isFetchRequest = req.headers['content-type']?.includes('application/json');
+
+    //logic for handling response
+    const sendSuccessResponse = (res, isFetchRequest, message) => {
+        if (isFetchRequest) {
+            res.status(201).json( message );
+        } else {
+            res.status(201).render('listings',  message );
+        }
+    };
+    const sendErrorResponse = (res, isFetchRequest, statusCode, message) => {
+        if (isFetchRequest) {
+            res.status(statusCode).json( message );
+        } else {
+            res.status(statusCode).render('error', { errors: message });
+        }
+    };
 
     try {
 
         const database = req.app.locals.database;
 
         //this searches the database collection for the total number of document
-        const count = await database.collection('gundam-models').countDocuments({ });
+        const count = await database.collection('gundam-listings').countDocuments({ });
 
         //if no data in collection then just show that there is no entries to list
         if(count == 0) { 
-            return res.render('listings', { message: `No Entries`, listings: { } });
+            return sendSuccessResponse(res, isFetchRequest, { message: 'No Entries', listings: { } });
         }
         else {
 
-            //in aggregate, $group groups all data with the same modelName and outputs one entry
-            //_id is the field to which to group the listing by
-            //$sum calculates the number of entries with the same name
-            //we use this to display the name of the model as well as number of entries for that model in listings.ejs
+            /*
             const listings = await database.collection('gundam-models')
                 .aggregate([
                 {    
@@ -190,6 +302,34 @@ const getAllModels = async (req,res) => {
                     $sort: { _id: 1 }
                 }
             ]).toArray();
+
+            */
+
+            //group listings with the same name together and count the number of same listings
+            const listings = await database.collection('gundam-listings')
+                .aggregate([
+                    {
+                        $lookup: {
+                            from: 'gundam-models-list', // Join with the 'gundam-models' collection
+                            localField: 'model_Id', // field in 'gundam-listings' collection
+                            foreignField: '_id',   // field in 'gundam-models' collection
+                            as: 'modelInfo'        // name of the field where the joined data will be stored
+                        }
+                    },
+                    {
+                        $unwind: { path: '$modelInfo', preserveNullAndEmptyArrays: true } // Unwind modelInfo to flatten the result
+                    },
+                    {
+                        $group: {
+                            _id: '$modelInfo.modelName',  // Group by modelName from 'gundam-models'
+                            totalEntry: { $sum: 1 }        // Count how many entries exist for each model
+                        }
+                    },
+                    {
+                        $sort: { _id: 1 }  // Sort by modelName alphabetically
+                    }
+                ])
+                .toArray();
 
             //now group each entry to the first character
             const groupedListings = {};
@@ -211,18 +351,19 @@ const getAllModels = async (req,res) => {
                     totalEntries: model.totalEntry
                 });
 
-                console.log(groupedListings);
             }
+
+            const message = { message: `${count} Total Entries`, listings: groupedListings };
         
-            res.render('listings', { message: `${count} Total Entries`, listings: groupedListings });
+            sendSuccessResponse(res, isFetchRequest, message);
 
         }
     }
     //this catch is used only when there is an unexpected error with the searching the database
     catch (e) {
         console.dir(e, {depth: null});
-        res.status(500).render('error', { errors: [{field: 'error', message: 'something unexpected happened'}] });
+        sendErrorResponse(res, isFetchRequest, 500, [{field: 'error', message: 'something unexpected happened'}]);
     }
 };
 
-export {getModels, getAllModels}
+export {getListings, getAllListings}

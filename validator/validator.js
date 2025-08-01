@@ -21,15 +21,15 @@ const validateQuery = (req, res, next) => {
     let formattedMinPrice = null;
     let formattedMaxPrice = null;
 
-    if(isNotEmpty(startDate) && isNotEmpty(endDate)) {
-
-        console.log('startDate: ' +startDate)
+    if(isNotEmpty(startDate)) {
         sDate = new Date(startDate.trim());
-        eDate = new Date(endDate.trim());
-        
     }
 
-    if(isNotEmpty(formattedMinPrice) && isNotEmpty(formattedMaxPrice)) {
+    if(isNotEmpty(endDate)) {
+        eDate = new Date(endDate.trim());
+    }
+
+    if(isNotEmpty(minPrice) && isNotEmpty(maxPrice)) {
 
         formattedMinPrice = Number(minPrice.trim());
         formattedMaxPrice = Number(maxPrice.trim());
@@ -50,12 +50,12 @@ const validateQuery = (req, res, next) => {
     }
     
     //checks if price queries are valid if they are not empty
-    if(isNotEmpty(endDate)) { 
+    if(isNotEmpty(minPrice)) { 
         if(isNaN(formattedMinPrice)) {  
             res.locals.errors.push({field: 'Price', message: 'minPrice is not a valid number'});
         }
     }
-    if(isNotEmpty(endDate)) { 
+    if(isNotEmpty(maxPrice)) { 
         if(isNaN(formattedMaxPrice)) {  
             res.locals.errors.push({field: 'Price', message: 'maxPrice is not a valid number'});
         }
