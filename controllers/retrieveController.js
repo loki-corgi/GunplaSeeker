@@ -18,14 +18,14 @@ const getListings = async (req, res) => {
         if (isFetchRequest) {
             res.status(201).json(message);
         } else {
-            res.status(201).render('index', message );
+            res.status(201).render("index", message );
         }
     };
     const sendErrorResponse = (res, isFetchRequest, statusCode, message) => {
         if (isFetchRequest) {
             res.status(statusCode).json(message);
         } else {
-            res.status(statusCode).render('error', { errors: message });
+            res.status(statusCode).render("error", { errors: message });
         }
     };
     
@@ -241,7 +241,7 @@ const getListings = async (req, res) => {
         console.error(e);
         console.dir(e, {depth: null});
 
-        const error = { field: 'Error', message: e.message };
+        const error = { field: "Error", message: e.message };
 
         //ensure status code exists to parse into sendErrorResponse
         const statusCode = e.statusCode || 500; 
@@ -295,20 +295,6 @@ const getAllListings = async (req,res) => {
             return sendSuccessResponse(res, isFetchRequest, { message: 'No Entries', listings: { } });
         }
         else {
-
-            /*
-            const listings = await database.collection('gundam-models')
-                .aggregate([
-                {    
-                    $group: { _id: "$modelName", totalEntry: { $sum: 1 } }
-                },
-                //required, since it's not guaranteed list is sorted
-                {
-                    $sort: { _id: 1 }
-                }
-            ]).toArray();
-
-            */
 
             //group listings with the same name together and count the number of same listings
             const listings = await database.collection('gundam-listings')
@@ -367,7 +353,7 @@ const getAllListings = async (req,res) => {
     //this catch is used only when there is an unexpected error with the searching the database
     catch (e) {
         console.dir(e, {depth: null});
-        sendErrorResponse(res, isFetchRequest, 500, [{field: 'error', message: 'something unexpected happened'}]);
+        sendErrorResponse(res, isFetchRequest, 500, [{field: "error", message: "something unexpected happened"}]);
     }
 };
 

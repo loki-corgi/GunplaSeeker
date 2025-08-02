@@ -109,7 +109,7 @@ const addModel = async (req, res) => {
             //there shoudn't be other validation errors but we still catch it just in case
             else {
                 
-                const error = [{ field: 'error', message: 'Non-propertiesNotSatisfied Validation error' }];
+                const error = [{ field: "error", message: "Non-propertiesNotSatisfied Validation error" }]
 
                 sendErrorResponse(res, isFetchRequest, 400, error);
             }  
@@ -117,7 +117,7 @@ const addModel = async (req, res) => {
         //this runs when the error is not from mongodb schema validation
         else {
             
-            const error = [{ field: 'error', message: 'Something went wrong' }];
+            const error = [{ field: "error", message: "Something went wrong" }]
 
             sendErrorResponse(res, isFetchRequest, 500, error);
             
