@@ -68,6 +68,18 @@ const form = (req, res) => {
     res.render('form', { message: null });
 }
 
+const contactPage = async (req, res) => {
+  
+    res.render('contact');
+
+}
+
+const aboutPage = async (req, res) => {
+  
+    res.render('about');
+
+}
+
 //handles all other routes and display the error page
 const invalidRoutes = async (req, res) => {
   
@@ -75,5 +87,4 @@ const invalidRoutes = async (req, res) => {
 
 }
 
-
-export { indexListing, form, invalidRoutes };
+export { indexListing, form, invalidRoutes, contactPage, aboutPage };
