@@ -49,8 +49,8 @@ gunplaseeker/
 1. Get file from source
 2. install dependencies
    
-  npm init -y
-  npm install
+  npm init -y;
+  npm install;
   
 4. start the server
 
@@ -87,6 +87,28 @@ fetch("http://localhost:3000/api/v1/model", {
   })
 });
 
+Use to fetch a json from api":
+
+fetch("http://localhost:3000/api/v1/model", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    modelName: "RX-78-2",
+    modelGrade: "High Grade",
+    price: "29.99",
+    storeName: "Hobby Planet",
+    streetNumber: "123",
+    streetName: "Model Ave",
+    city: "Toronto",
+    province: "ON"
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(err => console.error(err));
+
 Valid Model Grades
 
 See full list in /database/collections.js
@@ -95,15 +117,16 @@ See full list in /database/collections.js
 
 ## Schema Validation Rules
 
-| **Field**        | **Required** | **Validation Rules**                                            |
-| ---------------- | ------------ | --------------------------------------------------------------- |
-| **modelName**    | Yes          | String, 1–50 characters                                         |
-| **modelGrade**   | Yes          | Must match one of the allowed enum values                       |
-| **price**        | Yes          | Must be a valid decimal number                                  |
-| **storeName**    | No          | String, 2–40 characters                                         |
-| **streetNumber** | Yes          | Integer, ≥ 1                                                    |
-| **streetName**   | Yes          | String, 2–40 characters                                         |
-| **city**         | Yes          | String, 3–40 characters                                         |
-| **province**     | No           | Must match a valid Canadian province code (e.g., ON, QC, BC...) |
+| **Collection**         | **Field**        | **BSON Type** | **Validation Rules**                                                                  | **Required** | **Description**                                 |
+| ---------------------- | ---------------- | ------------- | ------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------- |
+| **gundam-models-list** | **modelName**    | string        | minLength: 1, maxLength: 50                                                           | Yes          | Model Name must be between 1 and 50 characters  |
+| **gundam-listings**    | **timestamp**    | date          | Required                                                                              | Yes          | Must be a Date object                           |
+|                        | **model\_Id**    | objectId      | Required, references the `gundam-models-list` document                                | Yes          | Reference to the Gundam model document          |
+|                        | **modelGrade**   | string        | enum: \['Advance Grade', 'Entry Grade', 'EX Model', ...]                              | Yes          | Must be one of the valid Gundam model grades    |
+|                        | **price**        | decimal       | minimum: 0                                                                            | Yes          | Price must be a dollar amount greater than 0    |
+|                        | **storeName**    | string        | minLength: 2, maxLength: 40                                                           | Yes          | Store name must be between 2 and 40 characters  |
+|                        | **streetNumber** | int           | minimum: 1                                                                            | Yes          | Street number must be an integer greater than 0 |
+|                        | **streetName**   | string        | minLength: 2, maxLength: 40                                                           | Yes          | Street name must be between 2 and 40 characters |
+|                        | **city**         | string        | minLength: 3, maxLength: 40                                                           | Yes          | City name must be between 3 and 40 characters   |
+|                        | **province**     | string        | enum: \['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'NT', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'] | Yes          | Must be a valid province or territory of Canada |
 
-Note: We force storeName value in our form for the client, however, it is not required as shown in the table above

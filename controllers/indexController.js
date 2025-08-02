@@ -51,9 +51,6 @@ const indexListing = async (req, res) => {
             ]
         ).toArray();
 
-        console.log("Newest listings:");
-        console.log(listings);
-
         //since we reuse index.ejs for showing models grabbed with filter,
         //we need to set pagination variables to null to prevent errors
         res.render('index', { message: message, listings: listings, currentPage: null, hasNextPage: null, hasPreviousPage: null } );
