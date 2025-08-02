@@ -218,6 +218,10 @@ const getListings = async (req, res) => {
         const hasNextPage = page * pageSize < count;
         const hasPreviousPage = page > 1;
 
+        //create a copy of query and remove page from queryCopy
+        const queryCopy = { ...req.query };
+        delete queryCopy.page;
+
         //reuse index.ejs for search result
         //we send currentPage, nextPage, previousPage and query for pagination
         res.render('index', { message: `Search Results: ${count} 
@@ -225,9 +229,10 @@ const getListings = async (req, res) => {
             listings: results, 
             currentPage: page, 
             hasNextPage: hasNextPage, 
-            hasPreviousPage: 
-            hasPreviousPage, 
-            query: query } );
+            hasPreviousPage: hasPreviousPage, 
+            //send the query so that ejs can handle it
+            query: queryCopy
+        });
 
     }
     //catches defined throw and errors from validation before searching database

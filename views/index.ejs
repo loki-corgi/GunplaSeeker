@@ -35,16 +35,17 @@
 
             <!--only appears if the variables are not null-->
             <% if (hasPreviousPage || hasNextPage) { %>
+                <% const queryStr = new URLSearchParams(query).toString(); %>
                 <nav id="page-nav">
                     <ul class="page-list">
                         <% if (hasPreviousPage) { %>
-                        <li><a class="page-link" href="?page=<%= currentPage - 1 %>&query=<%= query %>">Previous</a></li>
+                        <li><a class="page-link" href="?<%= queryStr %>&page=<%= currentPage - 1 %>>">Previous</a></li>
                         <% } %>
 
                         <li class="current-page">Page <%= currentPage %></li>
 
                         <% if (hasNextPage) { %>
-                        <li><a class="page-link" href="?page=<%= currentPage + 1 %>&query=<%= query %>">Next</a></li>
+                        <li><a class="page-link" href="?<%= queryStr %>&page=<%= currentPage + 1 %>>">Next</a></li>
                         <% } %>
                     </ul>
                 </nav>
