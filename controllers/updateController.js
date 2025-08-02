@@ -13,16 +13,23 @@ const addModel = async (req, res) => {
     //logic for handling response
     const sendSuccessResponse = (res, isFetchRequest, message) => {
         if (isFetchRequest) {
-            res.status(201).json(message);
-        } else {
-            res.status(201).render('form', message);
+            res.status(201).json({ message });
+        } 
+        else {
+            const msgString = message.message;
+            res.redirect(`/?msg=${encodeURIComponent(msgString)}`);
         }
     };
     const sendErrorResponse = (res, isFetchRequest, statusCode, message) => {
         if (isFetchRequest) {
             res.status(statusCode).json(message);
         } else {
-            res.status(statusCode).render('error', { errors: message });
+            if(statusCode == 400) {
+                res.status(statusCode).render('form', { errors: message });
+            }
+            else if (statusCode == 500) {
+                res.status(statusCode).render('error', { errors: message });
+            }
         }
     };
 
@@ -31,7 +38,7 @@ const addModel = async (req, res) => {
         const database = req.app.locals.database;
 
         const normalizedName = req.body.modelName.trim()
-            // escape quotes
+            // escape special chars (except hyphen) 
             .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?')
             .toUpperCase();
 
@@ -222,6 +229,5 @@ const addModel = async (req, res) => {
 };
 
 export { addModel };
-
 
 */
