@@ -25,7 +25,7 @@ const addModel = async (req, res) => {
             res.status(statusCode).json(message);
         } else {
             if(statusCode == 400) {
-                res.status(statusCode).render('form', { errors: message });
+                res.status(statusCode).render('error', { errors: message });
             }
             else if (statusCode == 500) {
                 res.status(statusCode).render('error', { errors: message });
@@ -232,3 +232,4 @@ export { addModel };
 
 
 */
+
