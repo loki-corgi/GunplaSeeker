@@ -13,13 +13,15 @@
 <body>
     <%- include('header') %>
 
-        <main id="form-page">
+        <div id="form-page" class="main_">
 
             <% if(message)  { %>
                 <h2><%= message %></h2>
             <% } %>
 
             <h2>Enter a new listing</h2>
+
+
 
             <form action="/api/v1/model" method="post" id="add-model-form">
             
@@ -93,7 +95,7 @@
                 <button type="submit">Submit Listing</button>
             </form>
 
-        </main>
+        </div>
 
         <%- include('footer') %>
 </body>

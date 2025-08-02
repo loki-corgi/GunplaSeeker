@@ -14,47 +14,65 @@
     <%- include('header') %>
 
         <main>
-        
-            <p class="white" id="page0"> Page: <%= currentPage ? currentPage: ''%> </p>
-            
 
-            <!--we call it section instead of div since it might be part of the marking criteria-->
-            <section id="content">
-                <p class="white" id="message"> <%= message %> </p>
-                <% listings.forEach((listing) => { %>
-                    <div class="listing <%= listing.modelGrade.toLowerCase().replace(/\s+/g,'-') %>"> 
-                        <h2 class="model-name"><%= listing.modelName %></h2>
-                        <p class="info">Grade: <%= listing.modelGrade %></p>
-                        <p class="info">Price: $<%= listing.price %></p>
-                        <p class="info">Date added: <%= new Date(listing.timestamp).toDateString() %></p>
-                        <p class="info">Store Name: <%= listing.storeName %> </p>
-                        <p class="info">Location: <%= listing.streetNumber %> <%= listing.streetName %>, <%= listing.city %>, <%= listing.province %> </p>
-                    </div>
-                <% }) %>
-            </section>
-
-            <!--only appears if the variables are not null-->
-            <% if (hasPreviousPage || hasNextPage) { %>
-                <% const queryStr = new URLSearchParams(query).toString(); %>
+            <div id="pagination">
+                <p class="white" id="page0"><%= currentPage ? 'Page: ' + currentPage : '' %></p>
+                <p class="white" id="message">
+                    <%= message %>
+                </p>
                 <nav id="page-nav">
                     <ul class="page-list">
-                        <% if (hasPreviousPage) { %>
-                        <li><a class="page-link" href="?<%= queryStr %>&page=<%= currentPage - 1 %>>">Previous</a></li>
-                        <% } %>
+                        <% if(currentPage) { %>
+                            <% const queryStr = new URLSearchParams(query).toString() %>
+                            <% if (hasPreviousPage) { %>
+                                <li><a class="page-link yellow" href="?<%= queryStr %>&page=<%= currentPage - 1 %>">Previous</a></li>
+                            <% } %>
 
-                        <li class="current-page">Page <%= currentPage %></li>
+                            <% if (hasPreviousPage || hasNextPage) { %>
+                                <li class="current-page yellow">Page <%= currentPage %>
+                                </li>
+                            <% } %>
 
-                        <% if (hasNextPage) { %>
-                        <li><a class="page-link" href="?<%= queryStr %>&page=<%= currentPage + 1 %>>">Next</a></li>
+                            <% if (hasNextPage) { %>
+                                <li><a class="page-link yellow"
+                                        href="?<%= queryStr %>&page=<%= currentPage + 1 %>">Next</a></li>
+                            <% } %>
                         <% } %>
+                                            
                     </ul>
                 </nav>
-            <% } %>
+                
+            </div>
 
-            <%- include('filters') %>
+
+            <!--we call it section instead of div since it might be part of the marking criteria-->
+            <div class="main_">
+                <div></div>
+                <section id="content">
+                    <% listings.forEach((listing)=> { %>
+                        <div class="listing">
+                            <h2 class="model-name">
+                                <%= listing.modelName %>
+                            </h2>
+                            <p class="info">Grade: <%= listing.modelGrade %>
+                            </p>
+                            <p class="info">Price: $<%= listing.price %>
+                            </p>
+                            <p class="info">Date added: <%= new Date(listing.timestamp).toDateString() %>
+                            </p>
+                            <p class="info">Store Name: <%= listing.storeName %>
+                            </p>
+                            <p class="info">Location: <%= listing.streetNumber %>
+                                    <%= listing.streetName %>, <%= listing.city %>, <%= listing.province %>
+                            </p>
+                        </div>
+                        <% }) %>
+                </section>
+                <%- include('filters') %>
+            </div>
 
         </main>
 
         <%- include('footer') %>
-</body>
+    </body>
 </html>

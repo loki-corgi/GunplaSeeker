@@ -14,11 +14,12 @@
     <%- include('header') %>
 
     <main> 
-        
-        <h2>Error</h2>
+        <div class="main_">
+                    <h2 class="yellow">Error</h2>
+
         
         <section class="error-container">
-            <dl>
+            <dl class="yellow">
                 <% errors.forEach(error => { %>
                 <dt><%= error.field %></dt>
                 <dd><%= error.message %></dd>
@@ -26,7 +27,8 @@
             </dl>
         </section>
         <%- include('filters') %>
-        
+        </div>
+
     </main>
     
     <%- include('footer') %>

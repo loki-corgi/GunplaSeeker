@@ -11,7 +11,6 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
-/* Header */
 header {
     background-color: #fb2f38;
     display: flex;
@@ -25,13 +24,12 @@ header h1 {
     margin: 0;
 }
 
-/* Navigation */
 nav {
     display: flex;
     align-items: center;
     background-color: #2c52b3;
     height: 60px;
-    border-bottom: 2px solid rgb(17, 17, 17);
+    border-bottom: 2px solid #333333;
 }
 
 nav ul {
@@ -53,18 +51,27 @@ nav ul {
     color: black;
 }
 
-/* Main */
-main {
+.main_ {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     gap: 1em;
     padding: 1em;
+
+}
+
+@media (max-width: 900px) {
+    .main_ {
+        grid-template-columns: 1fr;
+        padding: 0.5em;
+    }
 }
 
 #sidebar {
     background-color: beige;
     text-align: center;
-    border-radius: 15px
+    border-radius: 15px;
+    padding: 1em;
+    max-width: 100%;
 }
 
 #content {
@@ -76,6 +83,13 @@ main {
     grid-template-columns: 1fr;
 }
 
+@media (max-width: 900px) {
+    #content {
+        padding: 0 0.5em;
+        max-height: none;
+    }
+}
+
 .listing {
     text-align: center;
     padding: 1em;
@@ -84,12 +98,41 @@ main {
     height: 20em;
     transition: transform 0.3s ease;
     margin: 1em auto 0 auto;
-    border-radius: 15px
-    
+    border-radius: 15px;
+    background-color: beige;
 }
 
 .listing:hover {
     transform: scale(1.05);
+}
+
+.beige{
+    background-color:beige;
+}
+
+.error-container dl {
+    margin: 1em auto;
+    padding: 1em;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.error-container dt {
+    font-weight: bold;
+    margin-top: 0.5em;
+}
+
+.error-container dd {
+    margin: 0 0 0.5em 1em;
+}
+
+@media (max-width: 768px) {
+    .listing {
+        width: 90%;
+        height: auto;
+        margin: 1em auto;
+    }
 }
 
 /* Footer */
@@ -123,6 +166,10 @@ footer {
     color: rgb(242, 242, 145);
 }
 
+.yellow {
+    color: rgb(242, 242, 145);
+}
+
 #message {
     text-align: center;
 }
@@ -135,77 +182,85 @@ footer {
 #add-model-form {
     background-color: beige;
     border-radius: 15px;
-    padding:1em;
-
+    padding: 1em;
 }
 
-@media (max-width: 768px) {
-    nav ul {
-        grid-template-columns: 1fr;
+#pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0 1em;
+}
+
+.page-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 1em;
+    justify-content: center;
+}
+
+#page-nav{
+    background-color: transparent;
+    border:none;
+}
+
+@media (max-width: 600px) {
+    .page-list {
+        flex-direction: column;
+        gap: 0.3em;
+    }
+
+    #pagination {
+        flex-direction: column;
+        gap: 0.5em;
         text-align: center;
     }
+}
 
-    main {
-        grid-template-columns: 1fr;
+.page-link {
+    text-decoration: none;
+    color: rgb(242, 242, 145);
+    font-weight: bold;
+}
+
+.page-link:hover {
+    color: red;
+}
+
+a:hover {
+    color: red;
+}
+
+input {
+    border: 1px solid black;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Input width reset on larger screens */
+@media (min-width: 769px) {
+    input {
+        width: auto;
     }
-
-    footer {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .listing {
-        width: 90%;
-        height: auto;
-    }
-
-    #content {
-        padding: 0.5em;
-    }
 }
 
-.beige{
-    background-color: beige;
+#model-name {
+    margin-top: 1em;
 }
 
-a:hover{
-    color:red;
+.list {
+    border-radius: 15px;
 }
 
-input{
-        border: 1px solid black;
-       
-}
-
-#model-name{
-    margin-top:1em;
-}
-
-.list{
-        border-radius: 15px
-
-}
-
-.advance-grade{
-    background-color: rgb(204, 229, 255);
-}
-
-.entry-grade{
-	background-color: rgb(73, 203, 235);
-}
-
-.high-grade{
-    background-color: rgb(220, 60, 60);
-}
-
-/* Hide arrows in Chrome, Safari, Edge, Opera */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-/* Hide arrows in Firefox */
 input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
