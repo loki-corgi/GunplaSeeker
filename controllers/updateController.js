@@ -18,7 +18,6 @@ const addModel = async (req, res) => {
         else {
             const msgString = message.message;
             res.redirect(`/?msg=${encodeURIComponent(msgString)}`);
-        }
     };
     const sendErrorResponse = (res, isFetchRequest, statusCode, message) => {
         if (isFetchRequest) {
