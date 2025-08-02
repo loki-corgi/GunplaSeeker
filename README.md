@@ -49,18 +49,22 @@ gunplaseeker/
 1. Get file from source
 2. install dependencies
    
+  ``` 
   npm init -y;
   npm install;
-  
-4. start the server
+  ```
 
+3. start the server
+   
+  ```
   npm start
-  
-6. Open in browser:
+  ```
+
+4. Open in browser:
 
   http://localhost:3000
 
-Also rendered at
+### Also rendered at
 
 https://gunplaseeker.onrender.com/
 
@@ -70,6 +74,7 @@ https://gunplaseeker.onrender.com/
 
 Use fetch() to add a model and trigger validation:
 
+```javascript
 fetch("http://localhost:3000/api/v1/model", {
   method: "POST",
   headers: {
@@ -86,9 +91,11 @@ fetch("http://localhost:3000/api/v1/model", {
     province: "ON"
   })
 });
+```
 
-Use to fetch a json from api":
+Use to fetch a json from api:
 
+```javascript
 fetch("http://localhost:3000/api/v1/model", {
   method: "POST",
   headers: {
@@ -108,8 +115,9 @@ fetch("http://localhost:3000/api/v1/model", {
 .then(response => response.json())
 .then(data => console.log(data))
 .catch(err => console.error(err));
+```
 
-Valid Model Grades
+### Valid Model Grades
 
 See full list in /database/collections.js
 
