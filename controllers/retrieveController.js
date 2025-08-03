@@ -42,6 +42,14 @@ const getListings = async (req, res) => {
 
         const database = req.app.locals.database;
 
+        //get the page that is calling this route
+        const referrer = req.get('Referrer') || '';
+        let strictMatch = false;
+
+        if (referrer.includes('/api/v1/all-listings')) {
+            strictMatch = true;
+        }
+
         //stores the query to be used in $match inside aggregate method
         let query = {};
 
@@ -107,15 +115,26 @@ const getListings = async (req, res) => {
         }
         //modelName here has a different logic to the rest of the query logic
         if (modelName && modelName.trim() != '') {
-            //we need to escape special characters so that the regex doesn't complicate things
-            const normalizedSearch = modelName.trim()
-                // escape special chars
-                .replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&') 
-                // make quotes optional, note that there are special quote characters
-                .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?');   
 
-            //finally we also force the regex to consider only whole words
-            const modelCollectionQuery = { modelName: { $regex: `(^|\\s)${normalizedSearch}(\\s|$)`, $options: 'i' }} ;
+            let modelCollectionQuery = {};
+
+            //we get this from checking which page calls this route
+            //if it is from the listing page then we use strict match to just grab the listing with the specific name
+            if(strictMatch) {
+                modelCollectionQuery = { modelName: modelName.trim() };
+            }
+            else {
+                //we need to escape special characters so that the regex doesn't complicate things
+                const normalizedSearch = modelName.trim()
+                    // escape special chars
+                    .replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&') 
+                    // make quotes optional, note that there are special quote characters
+                    .replace(/["'“”‘’]/g, '(?:["\'“”‘’])?');   
+
+                //finally we also force the regex to consider only whole words
+                modelCollectionQuery = { modelName: { $regex: `(^|\\s)${normalizedSearch}(\\s|$)`, $options: 'i' }};
+
+            }
 
             //we get the model documents based on the regex query
             const models = await database.collection('gundam-models-list').find(modelCollectionQuery).toArray();
